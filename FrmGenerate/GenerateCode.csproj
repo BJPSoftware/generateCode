@@ -7,8 +7,8 @@
     <ProjectGuid>{126C488C-7695-4F47-9825-1EAD9A37721B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FrmGenerate</RootNamespace>
-    <AssemblyName>FrmGenerate</AssemblyName>
+    <RootNamespace>GenerateCode</RootNamespace>
+    <AssemblyName>GenerateCode</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,6 +33,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Devart.Shell.CommonRes">
+      <HintPath>D:\Devart\T4 Editor\Devart.Shell.CommonRes.dll</HintPath>
+    </Reference>
+    <Reference Include="Devart.Shell.Interfaces">
+      <HintPath>D:\Devart\T4 Editor\Devart.Shell.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Devart.Shell.TextEditor.Interfaces">
+      <HintPath>D:\Devart\T4 Editor\Devart.Shell.TextEditor.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Devart.Shell.Utils">
+      <HintPath>D:\Devart\T4 Editor\Devart.Shell.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Devart.TemplateEditor.Language">
+      <HintPath>D:\Devart\T4 Editor\Devart.TemplateEditor.Language.dll</HintPath>
+    </Reference>
+    <Reference Include="Devart.TemplateEditor.Vs">
+      <HintPath>D:\Devart\T4 Editor\Devart.TemplateEditor.Vs.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.TextTemplating.10.0">
       <HintPath>E:\Person\Downloads\代码生成器源码V1.2\代码生成器\DLL\Microsoft.VisualStudio.TextTemplating.10.0.dll</HintPath>
     </Reference>
@@ -55,10 +73,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\CreateCode.cs" />
-    <Compile Include="Core\CustomTextTemplatingEngineHost.cs" />
-    <Compile Include="Core\EntityClassInfo.cs" />
-    <Compile Include="Core\EntityClassPropertyInfo.cs" />
     <Compile Include="FrmGenerate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,11 +81,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Template\Template1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Template1.tt</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="FrmGenerate.resx">
       <DependentUpon>FrmGenerate.cs</DependentUpon>
     </EmbeddedResource>
@@ -83,6 +92,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -104,13 +114,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Template\Template1.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Template1.cs</LastGenOutput>
-    </Content>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Folder Include="bin\Debug\Template\" />
+    <Folder Include="Template\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

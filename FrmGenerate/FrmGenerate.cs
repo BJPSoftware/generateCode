@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Configuration;
 using System.Data;
 using System.Windows.Forms;
 using BJP.Framework.Repository;
 using BJP.Framework.Utility;
-using EntityInfo;
+using BJP.Framework.Code;
 
-namespace FrmGenerate
+namespace GenerateCode
 {
     public partial class frmMain : Form
     {
@@ -103,18 +104,24 @@ namespace FrmGenerate
             entityInfo.className = ConvertHelper.SplitAndToFirstUpper(selTableName, '_');
             entityInfo.packageName = "com.forestry.model.sys";
             entityInfo.dataTable = dtColumn;
+            entityInfo.codeLanguage = codeLanguage.Java;
 
+            string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
             entityInfo.createColumnInfo();
-            //string codeEntity = CreateCode.CreateEntityClass(entityInfo);
-            ////rtxtModel.AppendText(codeEntity);
+
+            rtboxView.Clear();
+            string codeEntity = CreateCode.CreateEntityClass(entityInfo,templatePath);
+            rtboxView.AppendText(codeEntity);
+
             //string codeDataAccess = CreateCode.CreateDataAccessClass(entityInfo);
             ////rtxtDAL.AppendText(codeDataAccess);
             //if (!string.IsNullOrEmpty(txtOutPath.Text))
             //{
-            //    File.WriteAllText(txtOutPath.Text + entityInfo.ClassName + ".cs",
+            //    File.WriteAllText(txtOutPath.Text + entityInfo.className + ".java",
             //        codeEntity);
-            //    File.WriteAllText(txtOutPath.Text + entityInfo.ClassName + "DAL.cs",
-            //        codeDataAccess);
+
+            //    //File.WriteAllText(txtOutPath.Text + entityInfo.ClassName + "DAL.cs",
+            //    //    codeDataAccess);
             //}
         }
     }

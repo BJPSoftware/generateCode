@@ -1,4 +1,4 @@
-﻿namespace FrmGenerate
+﻿namespace GenerateCode
 {
     partial class frmMain
     {
@@ -39,6 +39,7 @@
             this.btnCreate = new System.Windows.Forms.Button();
             this.txtOutPath = new System.Windows.Forms.TextBox();
             this.btnSelOutPath = new System.Windows.Forms.Button();
+            this.rtboxView = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // lblUserName
@@ -129,7 +130,7 @@
             this.txtOutPath.Name = "txtOutPath";
             this.txtOutPath.Size = new System.Drawing.Size(297, 21);
             this.txtOutPath.TabIndex = 9;
-            this.txtOutPath.Text = "f:\\temp";
+            this.txtOutPath.Text = "f:\\temp\\";
             // 
             // btnSelOutPath
             // 
@@ -140,11 +141,20 @@
             this.btnSelOutPath.Text = "选 择";
             this.btnSelOutPath.UseVisualStyleBackColor = true;
             // 
+            // rtboxView
+            // 
+            this.rtboxView.Location = new System.Drawing.Point(237, 73);
+            this.rtboxView.Name = "rtboxView";
+            this.rtboxView.Size = new System.Drawing.Size(464, 284);
+            this.rtboxView.TabIndex = 11;
+            this.rtboxView.Text = "";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(808, 369);
+            this.Controls.Add(this.rtboxView);
             this.Controls.Add(this.btnSelOutPath);
             this.Controls.Add(this.txtOutPath);
             this.Controls.Add(this.btnCreate);
@@ -176,6 +186,7 @@
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.TextBox txtOutPath;
         private System.Windows.Forms.Button btnSelOutPath;
+        private System.Windows.Forms.RichTextBox rtboxView;
     }
 }
 
