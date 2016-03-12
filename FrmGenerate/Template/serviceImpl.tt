@@ -1,0 +1,38 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+package <#= entity.servicePackageName #>.Impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.zd.core.service.BaseServiceImpl;
+import <#= entity.packageName #>.<#= entity.className #> ;
+import <#= entity.daoPackageName #>.<#= entity.className #>Dao ;
+import <#= entity.servicePackageName #>.<#= entity.className #>Service ;
+
+/**
+ * 
+ * ClassName: <#= entity.className #>ServiceImpl
+ * Function: TODO ADD FUNCTION. 
+ * Reason: TODO ADD REASON(可选). 
+ * Description: <#= entity.tableComment #>实体Service接口实现类.
+ * date: <#= System.DateTime.Now.ToString("yyyy-MM-dd") #>
+ *
+ * @author  luoyibo 创建文件
+ * @version 0.1
+ * @since JDK 1.8
+ */
+ 
+public class <#= entity.className #>ServiceImpl extends BaseServiceImpl<<#= entity.className #>> implements <#= entity.className #>Service{
+
+    @Resource
+    public void set<#= entity.className #>Dao(<#= entity.className #>Dao dao) {
+        this.dao = dao;
+    }
+
+}

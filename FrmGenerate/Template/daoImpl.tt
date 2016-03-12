@@ -1,0 +1,30 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+package <#= entity.daoPackageName #>.Impl;
+
+import org.springframework.stereotype.Repository;
+
+import com.zd.core.dao.BaseDaoImpl;
+import <#= entity.daoPackageName #>.<#= entity.className #>Dao ;
+import <#= entity.packageName #>.<#= entity.className #> ;
+
+
+/**
+ * 
+ * ClassName: <#= entity.className #>DaoImpl
+ * Function: TODO ADD FUNCTION. 
+ * Reason: TODO ADD REASON(可选). 
+ * Description: <#= entity.tableComment #>实体Dao接口实现类.
+ * date: <#= System.DateTime.Now.ToString("yyyy-MM-dd") #>
+ *
+ * @author  luoyibo 创建文件
+ * @version 0.1
+ * @since JDK 1.8
+ */
+@Repository
+public class <#= entity.className #>DaoImpl extends BaseDaoImpl<<#= entity.className #>> implements <#= entity.className #>Dao {
+
+}

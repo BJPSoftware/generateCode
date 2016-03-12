@@ -94,13 +94,59 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\Template\" />
-    <Folder Include="Template\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\framework\BJP.Framework\BJP.Framework.csproj">
       <Project>{214f155e-8cce-49b0-85b6-6caa0904a86c}</Project>
       <Name>BJP.Framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Template\dao.java">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dao.tt</DependentUpon>
+    </Content>
+    <Content Include="Template\dao.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>dao.java</LastGenOutput>
+    </Content>
+    <Content Include="Template\daoImpl.java">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>daoImpl.tt</DependentUpon>
+    </Content>
+    <Content Include="Template\daoImpl.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>daoImpl.java</LastGenOutput>
+    </Content>
+    <Content Include="Template\Entity.java">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entity.tt</DependentUpon>
+    </Content>
+    <Content Include="Template\Entity.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Entity.java</LastGenOutput>
+    </Content>
+    <Content Include="Template\service.java">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>service.tt</DependentUpon>
+    </Content>
+    <Content Include="Template\service.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>service.java</LastGenOutput>
+    </Content>
+    <Content Include="Template\serviceImpl.java">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>serviceImpl.tt</DependentUpon>
+    </Content>
+    <Content Include="Template\serviceImpl.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>serviceImpl.java</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

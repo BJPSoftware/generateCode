@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Configuration;
 using System.Data;
 using System.Windows.Forms;
@@ -41,7 +42,7 @@ namespace GenerateCode
 
             DbHelper dbHelper = new DbHelper(connString);
             DataTable dtTableName = dbHelper.Fill(sql);
-
+            lvTabeleName.Clear();
             foreach (DataRow dr in dtTableName.Rows)
             {
                 tableName = dr["name"].ToString();
@@ -62,10 +63,29 @@ namespace GenerateCode
         {
             DbHelper dbHelper = new DbHelper(connString);
             DataTable dtColumn = new DataTable();
+            string entityPackageName = txtModelPackage.Text;
+            if (string.IsNullOrEmpty(entityPackageName)) {
+                MessageBox.Show("实体包名不能为空");
+                return;
+            }
+            string entityMainDir = txtModelMainDir.Text;
+            if (string.IsNullOrEmpty(entityMainDir))
+            {
+                MessageBox.Show("实体包主目录不能为空");
+                return;
+            }
+            string[] listDir = entityPackageName.Split('.');
+            StringBuilder sb = new StringBuilder();
+            foreach (string s in listDir) {
+                sb.Append(s);
+                sb.Append("\\");
+            }
+
+            string entityFileDir = entityMainDir + sb.ToString();
             string COLUMN_SQL = @"SELECT  
                 Name=a.name,
                 AutoIncrement=case   when   COLUMNPROPERTY(   a.id,a.name,'IsIdentity')=1   then   '是'else   '否'   end,
-                IsPK=case   when   exists(SELECT   1   FROM   sysobjects   where   xtype<>'PK'   and   name   in   (
+                IsPK=case   when   exists(SELECT   1   FROM   sysobjects   where   xtype='PK'   and   name   in   (
                 SELECT   name   FROM   sysindexes   WHERE   indid   in(
                 SELECT   indid   FROM   sysindexkeys   WHERE   id   =   a.id   AND   colid=a.colid
                 )))   then   '是'   else   '否'   end,
@@ -86,43 +106,75 @@ namespace GenerateCode
                 order   by   a.id,a.colorder
             ";
             string selTableName = string.Empty;
+            string selTableComm = string.Empty;
+            //定义要生成的实体中需要排除的列
+            //主要是业务实体继承了基实体，在业务实体中就不需要再生成这些字段的映射了
+            string excludes = "CREATE_TIME,CREATE_USER,UPDATE_TIME,UPDATE_USER,VERSION,ISDELETE,ORDER_INDEX,EXT_FIELD01,EXT_FIELD02,EXT_FIELD03,EXT_FIELD04,EXT_FIELD05,NODE_LAYER,NODE_INFO,NODE_TYPE,NODE_INFOTYPE";
             try
             {
                 for (int i = 0; i < lvTabeleName.CheckedItems.Count; i++)
                 {
                     selTableName = lvTabeleName.CheckedItems[i].Tag.ToString();
+                    selTableComm = lvTabeleName.CheckedItems[i].Text.ToString();
+
+                    dtColumn = dbHelper.Fill(string.Format(COLUMN_SQL, selTableName));
+                    EntityClassInfo entityInfo = new EntityClassInfo();
+                    entityInfo.tableName = selTableName;
+                    entityInfo.tableComment = selTableComm;
+                    entityInfo.className = ConvertHelper.SplitAndToFirstUpper(selTableName, '_');
+                    entityInfo.packageName = txtModelPackage.Text;
+                    entityInfo.daoPackageName = txtDaoPackageName.Text;
+                    entityInfo.servicePackageName = txtServerPackageName.Text;
+                    entityInfo.dataTable = dtColumn;
+                    entityInfo.codeLanguage = codeLanguage.Java;
+                    entityInfo.excludes = excludes;
+
+                    string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
+                    entityInfo.createColumnInfo();
+
+                    rtboxView.Clear();
+                    //生成实体层代码
+                    string codeEntity = CreateCode.CreateEntityClass(entityInfo, templatePath);
+                    //rtboxView.AppendText(codeEntity);
+
+                    //生成Dao接口层代码
+                    string templatePathDao = ConfigurationManager.AppSettings["TemplateDao"].ToString();
+                    String codeDao = CreateCode.CreateEntityClass(entityInfo, templatePathDao);
+                    //rtboxView.AppendText(codeDao);
+
+                    //生成Dao接口实现层代码
+                    string TemplateDaoImpl = ConfigurationManager.AppSettings["TemplateDaoImpl"].ToString();
+                    String codeDaoImpl = CreateCode.CreateEntityClass(entityInfo, TemplateDaoImpl);
+                    //rtboxView.AppendText(codeDaoImpl);
+
+                    //生成Service接口层代码
+                    String TemplateService = ConfigurationManager.AppSettings["TemplateService"].ToString();
+                    String codeService = CreateCode.CreateEntityClass(entityInfo, TemplateService);
+                    //rtboxView.AppendText(codeService);
+
+                    //生成Service接口实现层代码
+                    String TemplateServiceImpl = ConfigurationManager.AppSettings["TemplateServiceImpl"].ToString();
+                    String codeServiceImpl = CreateCode.CreateEntityClass(entityInfo, TemplateServiceImpl);
+                    rtboxView.AppendText(codeServiceImpl);
+                    
+                    //string codeDataAccess = CreateCode.CreateDataAccessClass(entityInfo);
+                    ////rtxtDAL.AppendText(codeDataAccess);
+                    //if (!string.IsNullOrEmpty(entityFileDir))
+                    //{
+                    //    File.WriteAllText(entityFileDir + entityInfo.className + ".java",
+                    //        codeEntity);
+
+                    //    //File.WriteAllText(txtOutPath.Text + entityInfo.ClassName + "DAL.cs",
+                    //    //    codeDataAccess);
+                    //}
                 }
-                dtColumn = dbHelper.Fill(string.Format(COLUMN_SQL, selTableName));
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("读取数据库失败！" + ex.Message);
                 return;
             }
-            EntityClassInfo entityInfo = new EntityClassInfo();
-            entityInfo.tableName = selTableName;
-            entityInfo.className = ConvertHelper.SplitAndToFirstUpper(selTableName, '_');
-            entityInfo.packageName = "com.forestry.model.sys";
-            entityInfo.dataTable = dtColumn;
-            entityInfo.codeLanguage = codeLanguage.Java;
-
-            string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
-            entityInfo.createColumnInfo();
-
-            rtboxView.Clear();
-            string codeEntity = CreateCode.CreateEntityClass(entityInfo,templatePath);
-            rtboxView.AppendText(codeEntity);
-
-            //string codeDataAccess = CreateCode.CreateDataAccessClass(entityInfo);
-            ////rtxtDAL.AppendText(codeDataAccess);
-            //if (!string.IsNullOrEmpty(txtOutPath.Text))
-            //{
-            //    File.WriteAllText(txtOutPath.Text + entityInfo.className + ".java",
-            //        codeEntity);
-
-            //    //File.WriteAllText(txtOutPath.Text + entityInfo.ClassName + "DAL.cs",
-            //    //    codeDataAccess);
-            //}
         }
     }
 }

@@ -1,0 +1,126 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+package <#= entity.packageName #>;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zd.core.annotation.FieldInfo;
+import com.zd.core.model.BaseEntity;
+
+/**
+ * 
+ * ClassName: <#= entity.className #> 
+ * Function: TODO ADD FUNCTION. 
+ * Reason: TODO ADD REASON(可选). 
+ * Description: <#= entity.tableComment #>实体类.
+ * date: <#= System.DateTime.Now.ToString("yyyy-MM-dd") #>
+ *
+ * @author  luoyibo 创建文件
+ * @version 0.1
+ * @since JDK 1.8
+ */
+ 
+@Entity
+@Table(name = "<#= entity.tableName #>")
+@Cache(region = "all", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class <#= entity.className #> extends BaseEntity implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
+<#  
+    //主键列的处理
+    foreach(EntityClassPropertyInfo property in entity.PrimaryKeyList)
+    { #>
+	@Id
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@GeneratedValue(generator = "uuid")
+	@FieldInfo(name = "<#= property.ColumnLabel #>", type = "ID")
+	@Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
+	private String <#= property.PropertyName#>;        
+<#
+    //get和set时属性名的首字母要大写
+    var sTemp = property.PropertyName;
+    sTemp = sTemp.Substring(0, 1).ToUpper() + sTemp.Substring(1, sTemp.Length-1);
+#>
+	public void set<#= sTemp #>(String <#= property.PropertyName#>) {
+		this.<#= property.PropertyName#> = <#= property.PropertyName#>;
+	}
+	public String get<#= sTemp #>() {
+		return <#= property.PropertyName#>;
+	}
+		
+<#  } #>
+<#  
+    //常规列的处理
+    foreach(EntityClassPropertyInfo property in entity.NormalColumnList)
+    { #>
+	@FieldInfo(name = "<#= property.ColumnLabel #>")
+	@Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
+	private <#= property.PropertyType#> <#= property.PropertyName#>;
+<#
+    //get和set时属性名的首字母要大写
+    var sTemp = property.PropertyName;
+    sTemp = sTemp.Substring(0, 1).ToUpper() + sTemp.Substring(1, sTemp.Length-1);
+#>
+	public void set<#= sTemp #>(<#= property.PropertyType#> <#= property.PropertyName#>) {
+		this.<#= property.PropertyName#> = <#= property.PropertyName#>;
+	}
+	public <#= property.PropertyType#> get<#= sTemp #>() {
+		return <#= property.PropertyName#>;
+	}
+		
+<#  } #>
+<#  
+    //日期列的处理
+    foreach(EntityClassPropertyInfo property in entity.DateColumnList)
+    { #>
+	@FieldInfo(name = "<#= property.ColumnLabel #>")
+	@Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using=DateTimeSerializer.class)
+	private Date <#= property.PropertyName#>;
+<#
+    //get和set时属性名的首字母要大写
+    var sTemp = property.PropertyName;
+    sTemp = sTemp.Substring(0, 1).ToUpper() + sTemp.Substring(1, sTemp.Length-1);
+#>
+	public void set<#= sTemp #>(Date <#= property.PropertyName#>) {
+		this.<#= property.PropertyName#> = <#= property.PropertyName#>;
+	}
+	public Date get<#= sTemp #>() {
+		return <#= property.PropertyName#>;
+	}
+		
+<#  } #>
+
+	/** 以下为不需要持久化到数据库中的字段,根据项目的需要手工增加 
+    *@Transient
+    *@FieldInfo(name = "")
+	*private String field1;
+	*/
+}

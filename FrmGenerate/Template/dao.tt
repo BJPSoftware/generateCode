@@ -1,0 +1,27 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+package <#= entity.daoPackageName #>;
+
+import com.zd.core.dao.BaseDao;
+import <#= entity.packageName #>.<#= entity.className #> ;
+
+
+/**
+ * 
+ * ClassName: <#= entity.className #>Dao
+ * Function: TODO ADD FUNCTION. 
+ * Reason: TODO ADD REASON(可选). 
+ * Description: <#= entity.tableComment #>实体Dao接口类.
+ * date: <#= System.DateTime.Now.ToString("yyyy-MM-dd") #>
+ *
+ * @author  luoyibo 创建文件
+ * @version 0.1
+ * @since JDK 1.8
+ */
+ 
+public interface <#= entity.className #>Dao extends BaseDao<<#= entity.className #>> {
+
+}
