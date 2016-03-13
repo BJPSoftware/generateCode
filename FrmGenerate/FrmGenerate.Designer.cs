@@ -102,7 +102,7 @@
             this.txtDbName.Name = "txtDbName";
             this.txtDbName.Size = new System.Drawing.Size(100, 21);
             this.txtDbName.TabIndex = 6;
-            this.txtDbName.Text = "schooljw";
+            this.txtDbName.Text = "dbStudy";
             // 
             // lblDbName
             // 
@@ -174,7 +174,7 @@
             this.txtModelMainDir.Name = "txtModelMainDir";
             this.txtModelMainDir.Size = new System.Drawing.Size(246, 21);
             this.txtModelMainDir.TabIndex = 15;
-            this.txtModelMainDir.Text = "e:\\workspace\\jw\\jw-model\\src\\main\\java\\";
+            this.txtModelMainDir.Text = "E:\\yczn\\code\\jw\\jw-model\\src\\main\\java\\";
             // 
             // txtDaoMainDir
             // 
@@ -182,7 +182,7 @@
             this.txtDaoMainDir.Name = "txtDaoMainDir";
             this.txtDaoMainDir.Size = new System.Drawing.Size(246, 21);
             this.txtDaoMainDir.TabIndex = 18;
-            this.txtDaoMainDir.Text = "e:\\workspace\\jw\\jw-dao\\src\\main\\java\\";
+            this.txtDaoMainDir.Text = "E:\\yczn\\code\\jw\\jw-dao\\src\\main\\java\\";
             // 
             // txtDaoPackageName
             // 
@@ -225,7 +225,7 @@
             this.txtServiceMainDir.Name = "txtServiceMainDir";
             this.txtServiceMainDir.Size = new System.Drawing.Size(246, 21);
             this.txtServiceMainDir.TabIndex = 22;
-            this.txtServiceMainDir.Text = "e:\\workspace\\jw\\jw-service\\src\\main\\java\\";
+            this.txtServiceMainDir.Text = "E:\\yczn\\code\\jw\\jw-service\\src\\main\\java\\";
             // 
             // txtServerPackageName
             // 
@@ -273,6 +273,7 @@
             this.Controls.Add(this.lblUserName);
             this.Name = "frmMain";
             this.Text = "代码生成参数设置";
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -102,50 +102,25 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Template\dao.java">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>dao.tt</DependentUpon>
-    </Content>
     <Content Include="Template\dao.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>dao.java</LastGenOutput>
-    </Content>
-    <Content Include="Template\daoImpl.java">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>daoImpl.tt</DependentUpon>
+      <LastGenOutput>dao.cs</LastGenOutput>
     </Content>
     <Content Include="Template\daoImpl.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>daoImpl.java</LastGenOutput>
-    </Content>
-    <Content Include="Template\Entity.java">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Entity.tt</DependentUpon>
+      <LastGenOutput>daoImpl.cs</LastGenOutput>
     </Content>
     <Content Include="Template\Entity.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Entity.java</LastGenOutput>
-    </Content>
-    <Content Include="Template\service.java">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>service.tt</DependentUpon>
+      <LastGenOutput>Entity.cs</LastGenOutput>
     </Content>
     <Content Include="Template\service.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>service.java</LastGenOutput>
-    </Content>
-    <Content Include="Template\serviceImpl.java">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>serviceImpl.tt</DependentUpon>
+      <LastGenOutput>service.cs</LastGenOutput>
     </Content>
     <Content Include="Template\serviceImpl.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>serviceImpl.java</LastGenOutput>
+      <LastGenOutput>serviceImpl.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
