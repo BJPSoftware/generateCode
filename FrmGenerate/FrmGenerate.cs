@@ -14,6 +14,14 @@ namespace GenerateCode
     {
         public string connString = string.Empty;
 
+        public string modelPackageName = string.Empty;  //实体层包名
+        public string daoPackageName = string.Empty;    //dao层包名
+        public string servicePackageName = string.Empty;    //service层包名
+
+        public string modelFileDir = string.Empty; //model代码保存目录
+        public string daoFileDir = string.Empty;   //dao层代码保存目录
+        public string serviceFileDir = string.Empty;   //service层代码保存目录
+
         public frmMain()
         {
             InitializeComponent();
@@ -68,47 +76,11 @@ namespace GenerateCode
                 return;
             }
 
-            string entityPackageName = txtModelPackage.Text;
-            if (string.IsNullOrEmpty(entityPackageName)) {
-                MessageBox.Show("实体包名不能为空");
-                return;
-            }
-            string entityMainDir = txtModelMainDir.Text;
-            if (string.IsNullOrEmpty(entityMainDir))
-            {
-                MessageBox.Show("实体包主目录不能为空");
-                return;
-            }
-            //实体代码存放路径
-            string[] listDir = entityPackageName.Split('.');
-            StringBuilder sb = new StringBuilder();
-            foreach (string s in listDir) {
-                sb.Append(s);
-                sb.Append("\\");
-            }
-            string entityFileDir = entityMainDir + sb.ToString();
+            lboxInfo.Items.Clear();
 
-            //dao代码存放路径
-            string daoMainDir = txtDaoMainDir.Text;
-            listDir = txtDaoPackageName.Text.ToString().Split('.');
-            sb.Clear();
-            foreach (string s in listDir)
-            {
-                sb.Append(s);
-                sb.Append("\\");
-            }
-            string daoFileDir = daoMainDir + sb.ToString();
-            
-            //service代码存放路径
-            string serviceMainDir = txtServiceMainDir.Text;
-            listDir = txtServerPackageName.Text.ToString().Split('.');
-            sb.Clear();
-            foreach (string s in listDir)
-            {
-                sb.Append(s);
-                sb.Append("\\");
-            }
-            string serviceFileDir = serviceMainDir + sb.ToString();
+            lboxInfo.Items.Add("正在初始化相关包名与目录...");
+            intPackageAndPath();
+            lboxInfo.Items.Add("初始化完成 OK");
 
             string COLUMN_SQL = @"SELECT  
                 Name=a.name,
@@ -146,15 +118,17 @@ namespace GenerateCode
                     selTableName = lvTabeleName.CheckedItems[i].Tag.ToString();
                     selTableComm = lvTabeleName.CheckedItems[i].Text.ToString();
 
+                    lboxInfo.Items.Add("处理数据表" + selTableComm  + "的相关信息...");
+
                     dtColumn = dbHelper.Fill(string.Format(COLUMN_SQL, selTableName));
                     EntityClassInfo entityInfo = new EntityClassInfo();
                     entityInfo.tableName = selTableName;
                     entityInfo.tableComment = selTableComm;
                     tempClassName = ConvertHelper.SplitAndToFirstUpper(selTableName, '_');
                     entityInfo.className = tempClassName.Substring(0, 1).ToUpper() + tempClassName.Substring(1, tempClassName.Length - 1);
-                    entityInfo.packageName = txtModelPackage.Text;
-                    entityInfo.daoPackageName = txtDaoPackageName.Text;
-                    entityInfo.servicePackageName = txtServerPackageName.Text;
+                    entityInfo.packageName = modelPackageName;
+                    entityInfo.daoPackageName = daoPackageName;
+                    entityInfo.servicePackageName = servicePackageName;
                     entityInfo.dataTable = dtColumn;
                     entityInfo.codeLanguage = codeLanguage.Java;
                     entityInfo.excludes = excludes;
@@ -162,16 +136,18 @@ namespace GenerateCode
                     string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
                     entityInfo.createColumnInfo();
 
-                    rtboxView.Clear();
+                    //rtboxView.Clear();
                     //生成实体层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的实体层代码...");
                     string codeEntity = CreateCode.CreateEntityClass(entityInfo, templatePath);
                     //rtboxView.AppendText(codeEntity);
-                    if (string.IsNullOrEmpty(entityFileDir)){
-                        Directory.CreateDirectory(entityFileDir);
+                    if (!Directory.Exists(modelFileDir)){
+                        Directory.CreateDirectory(modelFileDir);
                     }
-                    File.WriteAllText(entityFileDir + entityInfo.className + ".java",codeEntity);
+                    File.WriteAllText(modelFileDir + entityInfo.className + ".java",codeEntity);
 
                     //生成Dao接口层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的dao接口层代码...");
                     string templatePathDao = ConfigurationManager.AppSettings["TemplateDao"].ToString();
                     String codeDao = CreateCode.CreateEntityClass(entityInfo, templatePathDao);
                     //rtboxView.AppendText(codeDao);
@@ -181,6 +157,7 @@ namespace GenerateCode
                     File.WriteAllText(daoFileDir + entityInfo.className + "Dao.java",codeDao);
 
                     //生成Dao接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的dao接口实现层代码...");
                     string TemplateDaoImpl = ConfigurationManager.AppSettings["TemplateDaoImpl"].ToString();
                     String codeDaoImpl = CreateCode.CreateEntityClass(entityInfo, TemplateDaoImpl);
                     //rtboxView.AppendText(codeDaoImpl);
@@ -191,6 +168,7 @@ namespace GenerateCode
                     File.WriteAllText(daoImplFileDir + entityInfo.className + "DaoImpl.java",codeDaoImpl);
 
                     //生成Service接口层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的service接口层代码...");
                     String TemplateService = ConfigurationManager.AppSettings["TemplateService"].ToString();
                     String codeService = CreateCode.CreateEntityClass(entityInfo, TemplateService);
                     //rtboxView.AppendText(codeService);
@@ -201,10 +179,11 @@ namespace GenerateCode
                     File.WriteAllText(serviceFileDir + entityInfo.className + "Service.java",codeService);
 
                     //生成Service接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的service接口实现层代码...");
                     String TemplateServiceImpl = ConfigurationManager.AppSettings["TemplateServiceImpl"].ToString();
                     String codeServiceImpl = CreateCode.CreateEntityClass(entityInfo, TemplateServiceImpl);
                     String serviceImplFileDir = serviceFileDir + @"\Impl\";
-                    rtboxView.AppendText(codeServiceImpl);
+                    //rtboxView.AppendText(codeServiceImpl);
 
                     if (!Directory.Exists(serviceImplFileDir))
                     {
@@ -212,7 +191,7 @@ namespace GenerateCode
                     }
                     File.WriteAllText(serviceImplFileDir + entityInfo.className + "ServiceImpl.java",codeServiceImpl);
                 }
-                MessageBox.Show("代码生成完成");
+                lboxInfo.Items.Add("全部所选数据表的代码生成完毕！");
             }
             catch (Exception ex)
             {
@@ -224,6 +203,35 @@ namespace GenerateCode
         private void frmMain_Load(object sender, EventArgs e)
         {
             btnConnect_Click(this, e);
+        }
+
+        private void intPackageAndPath()
+        {
+            string projectDir = txtProjectDir.Text;
+            string moduleCode = txtModuleCode.Text;
+            string projectPackageName = ConfigurationManager.AppSettings["ProjectPackageName"].ToString();
+            string projectName = ConfigurationManager.AppSettings["ProjectName"].ToString();
+
+            modelPackageName = projectPackageName + ".model." + moduleCode;
+            daoPackageName = projectPackageName + ".dao." + moduleCode;
+            servicePackageName = projectPackageName + ".service." + moduleCode;
+            
+            //将项目的包名转换成目录
+            string[] listDir = projectPackageName.Split('.');
+            StringBuilder sb = new StringBuilder();
+            foreach (string s in listDir)
+            {
+                sb.Append(s);
+                sb.Append("\\");
+            }
+
+            //形成最后的代码保存路径
+            //项目路径+ 代码分层对应的路径 + 项目包转换后的路径+ 模块编码
+            //如项目路径为e:\temp\jw\；项目包为com.zd.school.jw；模块编码为eduresources
+            //对应的model层的路径为e:\temp\jw\jw-model\src\main\java\com\zd\school\jw\eduresources
+            modelFileDir = projectDir + projectName + @"-model\src\main\java\" + sb.ToString() + @"model\" +  moduleCode + @"\";
+            daoFileDir = projectDir + projectName + @"-dao\src\main\java\" + sb.ToString() + @"dao\" + moduleCode + @"\";
+            serviceFileDir = projectDir + projectName + @"-service\src\main\java\" + sb.ToString() + @"service\" + moduleCode + @"\";
         }
     }
 }
