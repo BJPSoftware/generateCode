@@ -27,7 +27,8 @@ import <#= entity.servicePackageName #>.<#= entity.className #>Service ;
  * @version 0.1
  * @since JDK 1.8
  */
- 
+@Service
+@Transactional
 public class <#= entity.className #>ServiceImpl extends BaseServiceImpl<<#= entity.className #>> implements <#= entity.className #>Service{
 
     @Resource

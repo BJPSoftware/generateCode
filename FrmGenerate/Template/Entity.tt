@@ -29,9 +29,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zd.core.annotation.FieldInfo;
 import com.zd.core.model.BaseEntity;
+import com.zd.core.util.DateTimeSerializer;
 
 /**
  * 
@@ -50,77 +52,77 @@ import com.zd.core.model.BaseEntity;
 @Table(name = "<#= entity.tableName #>")
 @Cache(region = "all", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class <#= entity.className #> extends BaseEntity implements Serializable{
-	private static final long serialVersionUID = 1L;
-	
+    private static final long serialVersionUID = 1L;
+    
 <#  
     //主键列的处理
     foreach(EntityClassPropertyInfo property in entity.PrimaryKeyList)
     { #>
-	@Id
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@GeneratedValue(generator = "uuid")
-	@FieldInfo(name = "<#= property.ColumnLabel #>", type = "ID")
-	@Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
-	private String <#= property.PropertyName#>;        
+    @Id
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @GeneratedValue(generator = "uuid")
+    @FieldInfo(name = "<#= property.ColumnLabel #>", type = "ID")
+    @Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
+    private String <#= property.PropertyName#>;        
 <#
     //get和set时属性名的首字母要大写
     var sTemp = property.PropertyName;
     sTemp = sTemp.Substring(0, 1).ToUpper() + sTemp.Substring(1, sTemp.Length-1);
 #>
-	public void set<#= sTemp #>(String <#= property.PropertyName#>) {
-		this.<#= property.PropertyName#> = <#= property.PropertyName#>;
-	}
-	public String get<#= sTemp #>() {
-		return <#= property.PropertyName#>;
-	}
-		
+    public void set<#= sTemp #>(String <#= property.PropertyName#>) {
+        this.<#= property.PropertyName#> = <#= property.PropertyName#>;
+    }
+    public String get<#= sTemp #>() {
+        return <#= property.PropertyName#>;
+    }
+        
 <#  } #>
 <#  
     //常规列的处理
     foreach(EntityClassPropertyInfo property in entity.NormalColumnList)
     { #>
-	@FieldInfo(name = "<#= property.ColumnLabel #>")
-	@Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
-	private <#= property.PropertyType#> <#= property.PropertyName#>;
+    @FieldInfo(name = "<#= property.ColumnLabel #>")
+    @Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
+    private <#= property.PropertyType#> <#= property.PropertyName#>;
 <#
     //get和set时属性名的首字母要大写
     var sTemp = property.PropertyName;
     sTemp = sTemp.Substring(0, 1).ToUpper() + sTemp.Substring(1, sTemp.Length-1);
 #>
-	public void set<#= sTemp #>(<#= property.PropertyType#> <#= property.PropertyName#>) {
-		this.<#= property.PropertyName#> = <#= property.PropertyName#>;
-	}
-	public <#= property.PropertyType#> get<#= sTemp #>() {
-		return <#= property.PropertyName#>;
-	}
-		
+    public void set<#= sTemp #>(<#= property.PropertyType#> <#= property.PropertyName#>) {
+        this.<#= property.PropertyName#> = <#= property.PropertyName#>;
+    }
+    public <#= property.PropertyType#> get<#= sTemp #>() {
+        return <#= property.PropertyName#>;
+    }
+        
 <#  } #>
 <#  
     //日期列的处理
     foreach(EntityClassPropertyInfo property in entity.DateColumnList)
     { #>
-	@FieldInfo(name = "<#= property.ColumnLabel #>")
-	@Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonSerialize(using=DateTimeSerializer.class)
-	private Date <#= property.PropertyName#>;
+    @FieldInfo(name = "<#= property.ColumnLabel #>")
+    @Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonSerialize(using=DateTimeSerializer.class)
+    private Date <#= property.PropertyName#>;
 <#
     //get和set时属性名的首字母要大写
     var sTemp = property.PropertyName;
     sTemp = sTemp.Substring(0, 1).ToUpper() + sTemp.Substring(1, sTemp.Length-1);
 #>
-	public void set<#= sTemp #>(Date <#= property.PropertyName#>) {
-		this.<#= property.PropertyName#> = <#= property.PropertyName#>;
-	}
-	public Date get<#= sTemp #>() {
-		return <#= property.PropertyName#>;
-	}
-		
+    public void set<#= sTemp #>(Date <#= property.PropertyName#>) {
+        this.<#= property.PropertyName#> = <#= property.PropertyName#>;
+    }
+    public Date get<#= sTemp #>() {
+        return <#= property.PropertyName#>;
+    }
+        
 <#  } #>
 
-	/** 以下为不需要持久化到数据库中的字段,根据项目的需要手工增加 
+    /** 以下为不需要持久化到数据库中的字段,根据项目的需要手工增加 
     *@Transient
     *@FieldInfo(name = "")
-	*private String field1;
-	*/
+    *private String field1;
+    */
 }

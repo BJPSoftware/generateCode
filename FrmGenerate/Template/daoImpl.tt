@@ -26,5 +26,8 @@ import <#= entity.packageName #>.<#= entity.className #> ;
  */
 @Repository
 public class <#= entity.className #>DaoImpl extends BaseDaoImpl<<#= entity.className #>> implements <#= entity.className #>Dao {
-
+    public <#= entity.className #>DaoImpl() {
+        super(<#= entity.className #>.class);
+        // TODO Auto-generated constructor stub
+    }
 }
