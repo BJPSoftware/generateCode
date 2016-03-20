@@ -102,6 +102,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Template\controller.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>controller.java</LastGenOutput>
+    </Content>
     <Content Include="Template\dao.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>dao.cs</LastGenOutput>

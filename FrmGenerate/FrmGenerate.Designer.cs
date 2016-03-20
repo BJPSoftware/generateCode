@@ -94,7 +94,7 @@
             this.txtDbName.Name = "txtDbName";
             this.txtDbName.Size = new System.Drawing.Size(100, 21);
             this.txtDbName.TabIndex = 6;
-            this.txtDbName.Text = "dbStudy";
+            this.txtDbName.Text = "schooljw";
             // 
             // lblDbName
             // 
@@ -141,7 +141,7 @@
             this.txtProjectDir.Name = "txtProjectDir";
             this.txtProjectDir.Size = new System.Drawing.Size(246, 21);
             this.txtProjectDir.TabIndex = 26;
-            this.txtProjectDir.Text = "e:\\temp\\jw\\";
+            this.txtProjectDir.Text = "e:\\workspace\\jw\\";
             // 
             // txtModuleCode
             // 

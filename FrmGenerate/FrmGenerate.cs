@@ -17,10 +17,12 @@ namespace GenerateCode
         public string modelPackageName = string.Empty;  //实体层包名
         public string daoPackageName = string.Empty;    //dao层包名
         public string servicePackageName = string.Empty;    //service层包名
+        public string controllerPackageName = string.Empty;  //controller层包名
 
         public string modelFileDir = string.Empty; //model代码保存目录
         public string daoFileDir = string.Empty;   //dao层代码保存目录
         public string serviceFileDir = string.Empty;   //service层代码保存目录
+        public string controllerFileDir = string.Empty;   //controller层代码保存目录
 
         public frmMain()
         {
@@ -37,7 +39,7 @@ namespace GenerateCode
 
             connString = "Provider=SQLOLEDB;Data Source=(local);UID={0};pwd={1};DATABASE={2};";
             connString = string.Format(connString, userName, userPwd, dbName);
-
+            //connString = ConfigurationManager.ConnectionStrings["connection"].ConnectionString.ToString();//配置文件中取
             string sql = "SELECT a.*,";
             sql += "  label = b.value,";
             sql += " PrimaryKey = KCU.COLUMN_NAME";
@@ -108,6 +110,7 @@ namespace GenerateCode
             string selTableName = string.Empty;
             string selTableComm = string.Empty;
             string tempClassName = string.Empty;
+            string className = string.Empty;
             //定义要生成的实体中需要排除的列
             //主要是业务实体继承了基实体，在业务实体中就不需要再生成这些字段的映射了
             string excludes = "CREATE_TIME,CREATE_USER,UPDATE_TIME,UPDATE_USER,VERSION,ISDELETE,ORDER_INDEX,EXT_FIELD01,EXT_FIELD02,EXT_FIELD03,EXT_FIELD04,EXT_FIELD05,NODE_LAYER,NODE_INFO,NODE_TYPE,NODE_INFOTYPE";
@@ -125,10 +128,12 @@ namespace GenerateCode
                     entityInfo.tableName = selTableName;
                     entityInfo.tableComment = selTableComm;
                     tempClassName = ConvertHelper.SplitAndToFirstUpper(selTableName, '_');
-                    entityInfo.className = tempClassName.Substring(0, 1).ToUpper() + tempClassName.Substring(1, tempClassName.Length - 1);
+                    className = tempClassName.Substring(0, 1).ToUpper() + tempClassName.Substring(1, tempClassName.Length - 1);
+                    entityInfo.className = className;
                     entityInfo.packageName = modelPackageName;
                     entityInfo.daoPackageName = daoPackageName;
                     entityInfo.servicePackageName = servicePackageName;
+                    entityInfo.controllerPackageName = controllerPackageName;
                     entityInfo.dataTable = dtColumn;
                     entityInfo.codeLanguage = codeLanguage.Java;
                     entityInfo.excludes = excludes;
@@ -144,7 +149,7 @@ namespace GenerateCode
                     if (!Directory.Exists(modelFileDir)){
                         Directory.CreateDirectory(modelFileDir);
                     }
-                    File.WriteAllText(modelFileDir + entityInfo.className + ".java",codeEntity);
+                    File.WriteAllText(modelFileDir + className + ".java",codeEntity);
 
                     //生成Dao接口层代码
                     lboxInfo.Items.Add("生成数据表" + selTableComm + "的dao接口层代码...");
@@ -154,7 +159,7 @@ namespace GenerateCode
                     if (!Directory.Exists(daoFileDir)){
                         Directory.CreateDirectory(daoFileDir);
                     }
-                    File.WriteAllText(daoFileDir + entityInfo.className + "Dao.java",codeDao);
+                    File.WriteAllText(daoFileDir + className + "Dao.java",codeDao);
 
                     //生成Dao接口实现层代码
                     lboxInfo.Items.Add("生成数据表" + selTableComm + "的dao接口实现层代码...");
@@ -165,7 +170,7 @@ namespace GenerateCode
                     if (!Directory.Exists(daoImplFileDir)){
                         Directory.CreateDirectory(daoImplFileDir);
                     }
-                    File.WriteAllText(daoImplFileDir + entityInfo.className + "DaoImpl.java",codeDaoImpl);
+                    File.WriteAllText(daoImplFileDir + className + "DaoImpl.java",codeDaoImpl);
 
                     //生成Service接口层代码
                     lboxInfo.Items.Add("生成数据表" + selTableComm + "的service接口层代码...");
@@ -176,7 +181,7 @@ namespace GenerateCode
                 {
                         Directory.CreateDirectory(serviceFileDir);
                     }
-                    File.WriteAllText(serviceFileDir + entityInfo.className + "Service.java",codeService);
+                    File.WriteAllText(serviceFileDir + className + "Service.java",codeService);
 
                     //生成Service接口实现层代码
                     lboxInfo.Items.Add("生成数据表" + selTableComm + "的service接口实现层代码...");
@@ -189,7 +194,20 @@ namespace GenerateCode
                     {
                         Directory.CreateDirectory(serviceImplFileDir);
                     }
-                    File.WriteAllText(serviceImplFileDir + entityInfo.className + "ServiceImpl.java",codeServiceImpl);
+                    File.WriteAllText(serviceImplFileDir + className + "ServiceImpl.java",codeServiceImpl);
+                    
+                    //生成Controller接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的controller层代码...");
+                    String TemplateController = ConfigurationManager.AppSettings["TemplateController"].ToString();
+                    String codeController = CreateCode.CreateEntityClass(entityInfo, TemplateController);
+                    //String controller = serviceFileDir + @"\Impl\";
+                    //rtboxView.AppendText(codeServiceImpl);
+
+                    if (!Directory.Exists(controllerFileDir))
+                    {
+                        Directory.CreateDirectory(controllerFileDir);
+                    }
+                    File.WriteAllText(controllerFileDir + className + "Controller.java", codeController);
                 }
                 lboxInfo.Items.Add("全部所选数据表的代码生成完毕！");
             }
@@ -215,7 +233,8 @@ namespace GenerateCode
             modelPackageName = projectPackageName + ".model." + moduleCode;
             daoPackageName = projectPackageName + ".dao." + moduleCode;
             servicePackageName = projectPackageName + ".service." + moduleCode;
-            
+            controllerPackageName = projectPackageName + ".controller." + moduleCode;
+
             //将项目的包名转换成目录
             string[] listDir = projectPackageName.Split('.');
             StringBuilder sb = new StringBuilder();
@@ -232,6 +251,7 @@ namespace GenerateCode
             modelFileDir = projectDir + projectName + @"-model\src\main\java\" + sb.ToString() + @"model\" +  moduleCode + @"\";
             daoFileDir = projectDir + projectName + @"-dao\src\main\java\" + sb.ToString() + @"dao\" + moduleCode + @"\";
             serviceFileDir = projectDir + projectName + @"-service\src\main\java\" + sb.ToString() + @"service\" + moduleCode + @"\";
+            controllerFileDir = projectDir + projectName + @"-web\src\main\java\" + sb.ToString() + @"controller\" + moduleCode + @"\";
         }
     }
 }
