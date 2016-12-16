@@ -6,17 +6,15 @@
 package <#= entity.packageName #>;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Date;
+import java.math.BigDecimal;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -27,10 +25,9 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.zd.core.annotation.FieldInfo;
 import com.zd.core.model.BaseEntity;
 import com.zd.core.util.DateTimeSerializer;
@@ -50,33 +47,15 @@ import com.zd.core.util.DateTimeSerializer;
  
 @Entity
 @Table(name = "<#= entity.tableName #>")
-@Cache(region = "all", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+<#  
+    foreach(EntityClassPropertyInfo property in entity.PrimaryKeyList)
+    { 
+#>
+@AttributeOverride(name = "uuid", column = @Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>))
+<#  } #>
 public class <#= entity.className #> extends BaseEntity implements Serializable{
     private static final long serialVersionUID = 1L;
     
-<#  
-    //主键列的处理
-    foreach(EntityClassPropertyInfo property in entity.PrimaryKeyList)
-    { #>
-    @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid")
-    @GeneratedValue(generator = "uuid")
-    @FieldInfo(name = "<#= property.ColumnLabel #>", type = "ID")
-    @Column(name = "<#= property.ColumnName #>", length = <#= property.MaxLength #>, nullable = <#= property.CanNull #>)
-    private String <#= property.PropertyName#>;        
-<#
-    //get和set时属性名的首字母要大写
-    var sTemp = property.PropertyName;
-    sTemp = sTemp.Substring(0, 1).ToUpper() + sTemp.Substring(1, sTemp.Length-1);
-#>
-    public void set<#= sTemp #>(String <#= property.PropertyName#>) {
-        this.<#= property.PropertyName#> = <#= property.PropertyName#>;
-    }
-    public String get<#= sTemp #>() {
-        return <#= property.PropertyName#>;
-    }
-        
-<#  } #>
 <#  
     //常规列的处理
     foreach(EntityClassPropertyInfo property in entity.NormalColumnList)
