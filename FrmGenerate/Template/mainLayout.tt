@@ -1,0 +1,78 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.mainLayout", {
+    extend: "core.app.base.BasePanel",
+    alias: "widget.<#= entity.JsTwoDirName #>.mainlayout",
+    layout: "border",
+    bodyPadding: 2,
+    border: false,
+    funCode: "<#= entity.JsTwoDirName #>_main",
+    detCode: "<#= entity.JsTwoDirName #>_detail",
+    detLayout: "<#= entity.JsTwoDirName #>.detaillayout",
+    funData: {
+        action: comm.get("baseUrl") + "/<#= entity.className #>", //请求Action
+        whereSql: "", //表格查询条件
+        orderSql: "", //表格排序条件
+        filter: "",
+        pkName: "uuid",
+        width: 400,
+        height: 200,
+        defaultObj: {},
+    },
+    items: [{
+        xtype: 'basecenterpanel',
+        region: "center",
+        items: [{
+            xtype: "basequerypanel",
+            layout: 'form',
+            region: "north",
+            height: 160,
+            items: [{
+                xtype: "container",
+                layout: "hbox", // 从左往右的布局
+                items: [{
+                    flex: 1,
+                    labelAlign: "right",
+                    fieldLabel: "文本查询样例",
+                    xtype: "basequeryfield",
+                    queryType: "textfield",
+                    name: "className"
+                },{
+                    flex: 1,
+                    labelAlign: "right",
+                    fieldLabel: "数据字典项查询样例",
+                    name: "classification",
+                    xtype: "basequeryfield",
+                    queryType: "basecombobox",
+                    config: {
+                        ddCode: "CLASSIFICATION"
+                    }
+                }]
+            }, {
+                xtype: "container",
+                layout: "hbox", // 从左往右的布局
+                items: [{
+                    flex: 1,
+                    labelAlign: "right",
+                    fieldLabel: "日期查询样例",
+                    xtype: "basequeryfield",
+                    queryType: "datetimefield",
+                    name: "beginDate"
+                }, {
+                    flex: 1,
+                    labelAlign: "right",
+                    fieldLabel: "结束日期",
+                    xtype: "basequeryfield",
+                    queryType: "datetimefield",
+                    name: "endDate"
+                }]
+            }]
+        }, {
+            xtype: "<#= entity.JsTwoDirName #>.grid",
+            region: "center"
+        }]
+    }]
+})

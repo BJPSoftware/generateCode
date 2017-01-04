@@ -1,0 +1,205 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.controller.MainController", {
+    extend: "Ext.app.Controller",
+    mixins: {
+        suppleUtil: "core.util.SuppleUtil",
+        messageUtil: "core.util.MessageUtil",
+        formUtil: "core.util.FormUtil",
+        gridActionUtil: "core.util.GridActionUtil",
+        dateUtil: 'core.util.DateUtil'
+    },
+    views: [
+        "core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.mainLayout",
+        "core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.detailLayout",
+        "core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.listGrid",
+        "core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.detailForm",
+    ],
+    init: function() {
+        var self = this;
+        this.control({
+            /**
+             * 操作列的操作事件
+             */
+            "basegrid[funCode=<#= entity.JsTwoDirName #>_main] actioncolumn[ref=<#= entity.JsTwoDirName #>detail]": {
+                detailClick: function(grid, cmd, rowIndex) {
+                    switch (cmd) {
+                        case "edit":
+                            self.doDetail(grid, cmd, rowIndex);
+                            break;
+                        case "read":
+                            self.doDetail(grid, cmd, rowIndex);
+                            break;
+                        case "delete":
+                            self.doDelete(grid, cmd, rowIndex);
+                            break;
+                    }
+
+                    return false;
+                }
+            },
+        });
+    },
+    doDetail: function(btn, cmd, rowIndex) {
+        var self = this;
+        var basePanel = btn.up("panel[xtype=<#= entity.JsTwoDirName #>.mainlayout]");
+        var baseGrid = basePanel.down("basegrid");
+        var funData = basePanel.funData;
+        var detCode = basePanel.detCode;
+        var detLayout = basePanel.detLayout;
+        var defaultObj = funData.defaultObj;
+        //处理特殊默认值
+        var insertObj = self.getDefaultValue(defaultObj);
+        var popFunData = Ext.apply(funData, {
+            grid: baseGrid
+        });
+        var iconCls = "table_add";
+        var title = "增加";
+        var operType = cmd;
+        var winId = detCode + "_win";
+        var closeAction = "destroy";
+        var width = funData.width;
+        var height = funData.height;
+        var itemXtype = "<#= entity.JsTwoDirName #>.detailform";
+        switch (cmd) {
+            case "add":
+                title = "增加";
+                iconCls = "table_add";
+                break;
+            case "edit":
+                title = "编辑";
+                iconCls = "table_edit";
+                if (!Ext.isEmpty(rowIndex)) {
+                    //通过Action列修改
+                    records = baseGrid.getStore().getAt(rowIndex);
+                    insertObj = records.data;
+                    selCount = 1;
+                } else {
+                    //选中后点击修改按钮修改
+                    records = baseGrid.getSelectionModel().getSelection();
+                    if (records.length != 0) {
+                        insertObj = records[0].data;
+                        selCount = records.length;
+                    } else {
+                        selCount = 0;
+                    }
+                }
+                if (selCount != 1) {
+                    self.Warning("请选择要修改的数据");
+                    return;
+                }
+                break;
+            case "read":
+                title = "详情";
+                if (!Ext.isEmpty(rowIndex)) {
+                    records = baseGrid.getStore().getAt(rowIndex);
+                    insertObj = records.data;
+                    selCount = 1;
+                } else {
+                    //选中后点击修改按钮修改
+                    records = baseGrid.getSelectionModel().getSelection();
+                    insertObj = records[0].data;
+                    selCount = records.length;
+                }
+                if (selCount != 1) {
+                    self.Warning("请选择要查看的数据");
+                    return;
+                }
+                break;            
+        }
+        var win = Ext.getCmp(winId);
+        if (!win) {
+            win = Ext.create('core.app.base.BaseFormWin', {
+                title: title,
+                id: winId,
+                closeAction: closeAction,
+                width: width,
+                height: height,
+                iconCls: iconCls,
+                operType: operType,
+                cmd: cmd,
+                funData: popFunData,
+                funCode: detCode,
+                items: [{
+                    xtype: detLayout,
+                    items: [{
+                        xtype: itemXtype
+                    }]
+                }]
+            });
+        }
+        win.show();
+        var objDetForm = null;
+        var detailPanel = win.down("basepanel[funCode=" + detCode + "]");
+        var objDetailForm = detailPanel.down("panel[xtype=" + itemXtype + "]");
+        // switch (cmd) {
+        //     case "add":
+        //         objDetailForm = detailPanel.down("panel[xtype=" + itemXtype + "]");
+        //         break;
+        //     case "edit":
+        //         objDetailForm = detailPanel.down("panel[xtype=" + itemXtype + "]");
+        //         break;
+        //     case "read":
+        //         objDetailForm = detailPanel.down("panel[xtype=" + itemXtype + "]");
+        //         break;
+        // }
+
+        var detailForm = objDetailForm.getForm();
+        self.setFormValue(detailForm, insertObj);
+        if(cmd=="read")
+            self.setFuncReadOnly(funData, objDetailForm, true);
+    },
+
+    /**
+     * 删除的响应操作
+     */
+    doDelete: function(btn, cmd, rowIndex) {
+        //debugger
+        var self = this;
+        var basePanel = btn.up("panel[xtype=<#= entity.JsTwoDirName #>.mainlayout]");
+        var baseGrid = basePanel.down("basegrid");
+        var funData = basePanel.funData;
+        var pkName = funData.pkName;
+        var pkValue;
+        var ids = new Array();
+        if (!Ext.isEmpty(rowIndex)) {
+            //通过Action列删除
+            records = baseGrid.getStore().getAt(rowIndex);
+            pkValue = records.get(pkName);
+            ids.push(pkValue);
+        } else {
+            //选中后点击修改按钮修改
+            records = baseGrid.getSelectionModel().getSelection();
+            Ext.each(records, function(rec) {
+                pkValue = rec.get(pkName);
+                ids.push(pkValue);
+            });
+        }
+        if (ids.length == 0) {
+            self.Warning("请选择要删除的数据");
+            return;
+        }
+        var title = "确定要删除所选数据吗？";
+        Ext.Msg.confirm('警告', title, function(btn, text) {
+            if (btn == 'yes') {
+                //发送ajax请求
+                var resObj = self.ajax({
+                    url: funData.action + "/dodelete",
+                    params: {
+                        ids: ids.join(","),
+                        pkName: pkName
+                    }
+                });
+                if (resObj.success) {
+                    baseGrid.getStore().load(0);
+                    self.msgbox(resObj.obj);
+                } else {
+                    self.Error(resObj.obj);
+                }
+            }
+        });
+    },
+});

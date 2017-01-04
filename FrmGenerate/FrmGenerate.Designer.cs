@@ -39,9 +39,16 @@
             this.btnCreate = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.txtProjectDir = new System.Windows.Forms.TextBox();
-            this.txtModuleCode = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.txtModelTwo = new System.Windows.Forms.TextBox();
+            this.lblModelTwo = new System.Windows.Forms.Label();
             this.lboxInfo = new System.Windows.Forms.ListBox();
+            this.txtModelOne = new System.Windows.Forms.TextBox();
+            this.lblModelOne = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtServer = new System.Windows.Forms.TextBox();
+            this.txtJsName = new System.Windows.Forms.TextBox();
+            this.lblJsMode = new System.Windows.Forms.Label();
+            this.btnCreateAfter = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblUserName
@@ -64,7 +71,7 @@
             // lblUserPwd
             // 
             this.lblUserPwd.AutoSize = true;
-            this.lblUserPwd.Location = new System.Drawing.Point(235, 11);
+            this.lblUserPwd.Location = new System.Drawing.Point(780, 20);
             this.lblUserPwd.Name = "lblUserPwd";
             this.lblUserPwd.Size = new System.Drawing.Size(71, 12);
             this.lblUserPwd.TabIndex = 2;
@@ -72,15 +79,15 @@
             // 
             // txtUserPwd
             // 
-            this.txtUserPwd.Location = new System.Drawing.Point(313, 3);
+            this.txtUserPwd.Location = new System.Drawing.Point(857, 16);
             this.txtUserPwd.Name = "txtUserPwd";
             this.txtUserPwd.Size = new System.Drawing.Size(100, 21);
             this.txtUserPwd.TabIndex = 3;
-            this.txtUserPwd.Text = "sql2008";
+            this.txtUserPwd.Text = "A.b.c.d.1234";
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(626, 2);
+            this.btnConnect.Location = new System.Drawing.Point(1142, 9);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(75, 23);
             this.btnConnect.TabIndex = 4;
@@ -90,16 +97,16 @@
             // 
             // txtDbName
             // 
-            this.txtDbName.Location = new System.Drawing.Point(511, 3);
+            this.txtDbName.Location = new System.Drawing.Point(1031, 13);
             this.txtDbName.Name = "txtDbName";
             this.txtDbName.Size = new System.Drawing.Size(100, 21);
             this.txtDbName.TabIndex = 6;
-            this.txtDbName.Text = "schooljw";
+            this.txtDbName.Text = "sdfz_school";
             // 
             // lblDbName
             // 
             this.lblDbName.AutoSize = true;
-            this.lblDbName.Location = new System.Drawing.Point(433, 11);
+            this.lblDbName.Location = new System.Drawing.Point(966, 20);
             this.lblDbName.Name = "lblDbName";
             this.lblDbName.Size = new System.Drawing.Size(59, 12);
             this.lblDbName.TabIndex = 5;
@@ -111,25 +118,25 @@
             this.lvTabeleName.FullRowSelect = true;
             this.lvTabeleName.Location = new System.Drawing.Point(12, 30);
             this.lvTabeleName.Name = "lvTabeleName";
-            this.lvTabeleName.Size = new System.Drawing.Size(213, 574);
+            this.lvTabeleName.Size = new System.Drawing.Size(561, 574);
             this.lvTabeleName.TabIndex = 7;
             this.lvTabeleName.UseCompatibleStateImageBehavior = false;
             this.lvTabeleName.View = System.Windows.Forms.View.List;
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(732, 3);
+            this.btnCreate.Location = new System.Drawing.Point(1142, 51);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(75, 23);
             this.btnCreate.TabIndex = 8;
-            this.btnCreate.Text = "生 成";
+            this.btnCreate.Text = "生成前端";
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(574, 48);
+            this.label7.Location = new System.Drawing.Point(943, 90);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(65, 12);
             this.label7.TabIndex = 27;
@@ -137,48 +144,116 @@
             // 
             // txtProjectDir
             // 
-            this.txtProjectDir.Location = new System.Drawing.Point(682, 43);
+            this.txtProjectDir.Location = new System.Drawing.Point(1014, 85);
             this.txtProjectDir.Name = "txtProjectDir";
-            this.txtProjectDir.Size = new System.Drawing.Size(246, 21);
+            this.txtProjectDir.Size = new System.Drawing.Size(203, 21);
             this.txtProjectDir.TabIndex = 26;
-            this.txtProjectDir.Text = "e:\\workspace\\jw\\";
+            this.txtProjectDir.Text = "e:\\javacode\\sdfz_sdfz\\";
             // 
-            // txtModuleCode
+            // txtModelTwo
             // 
-            this.txtModuleCode.Location = new System.Drawing.Point(313, 45);
-            this.txtModuleCode.Name = "txtModuleCode";
-            this.txtModuleCode.Size = new System.Drawing.Size(258, 21);
-            this.txtModuleCode.TabIndex = 25;
-            this.txtModuleCode.Text = "eduresources";
+            this.txtModelTwo.Location = new System.Drawing.Point(657, 81);
+            this.txtModelTwo.Name = "txtModelTwo";
+            this.txtModelTwo.Size = new System.Drawing.Size(258, 21);
+            this.txtModelTwo.TabIndex = 25;
+            this.txtModelTwo.Text = "salary";
             // 
-            // label8
+            // lblModelTwo
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(235, 50);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(65, 12);
-            this.label8.TabIndex = 24;
-            this.label8.Text = "模块编码：";
+            this.lblModelTwo.AutoSize = true;
+            this.lblModelTwo.Location = new System.Drawing.Point(579, 86);
+            this.lblModelTwo.Name = "lblModelTwo";
+            this.lblModelTwo.Size = new System.Drawing.Size(65, 12);
+            this.lblModelTwo.TabIndex = 24;
+            this.lblModelTwo.Text = "二级模块：";
             // 
             // lboxInfo
             // 
             this.lboxInfo.FormattingEnabled = true;
             this.lboxInfo.ItemHeight = 12;
-            this.lboxInfo.Location = new System.Drawing.Point(237, 81);
+            this.lboxInfo.Location = new System.Drawing.Point(581, 184);
             this.lboxInfo.Name = "lboxInfo";
-            this.lboxInfo.Size = new System.Drawing.Size(691, 520);
+            this.lboxInfo.Size = new System.Drawing.Size(636, 328);
             this.lboxInfo.TabIndex = 28;
+            // 
+            // txtModelOne
+            // 
+            this.txtModelOne.Location = new System.Drawing.Point(657, 51);
+            this.txtModelOne.Name = "txtModelOne";
+            this.txtModelOne.Size = new System.Drawing.Size(258, 21);
+            this.txtModelOne.TabIndex = 30;
+            this.txtModelOne.Text = "salary";
+            // 
+            // lblModelOne
+            // 
+            this.lblModelOne.AutoSize = true;
+            this.lblModelOne.Location = new System.Drawing.Point(579, 56);
+            this.lblModelOne.Name = "lblModelOne";
+            this.lblModelOne.Size = new System.Drawing.Size(65, 12);
+            this.lblModelOne.TabIndex = 29;
+            this.lblModelOne.Text = "一级模块：";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(593, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 31;
+            this.label1.Text = "服务器：";
+            // 
+            // txtServer
+            // 
+            this.txtServer.Location = new System.Drawing.Point(637, 12);
+            this.txtServer.Name = "txtServer";
+            this.txtServer.Size = new System.Drawing.Size(137, 21);
+            this.txtServer.TabIndex = 32;
+            this.txtServer.Text = "11.35.189.6";
+            // 
+            // txtJsName
+            // 
+            this.txtJsName.Location = new System.Drawing.Point(657, 108);
+            this.txtJsName.Name = "txtJsName";
+            this.txtJsName.Size = new System.Drawing.Size(258, 21);
+            this.txtJsName.TabIndex = 34;
+            this.txtJsName.Text = "salaryitem";
+            // 
+            // lblJsMode
+            // 
+            this.lblJsMode.AutoSize = true;
+            this.lblJsMode.Location = new System.Drawing.Point(579, 113);
+            this.lblJsMode.Name = "lblJsMode";
+            this.lblJsMode.Size = new System.Drawing.Size(53, 12);
+            this.lblJsMode.TabIndex = 33;
+            this.lblJsMode.Text = "Js模块：";
+            // 
+            // btnCreateAfter
+            // 
+            this.btnCreateAfter.Location = new System.Drawing.Point(1031, 51);
+            this.btnCreateAfter.Name = "btnCreateAfter";
+            this.btnCreateAfter.Size = new System.Drawing.Size(75, 23);
+            this.btnCreateAfter.TabIndex = 35;
+            this.btnCreateAfter.Text = "生成后端";
+            this.btnCreateAfter.UseVisualStyleBackColor = true;
+            this.btnCreateAfter.Click += new System.EventHandler(this.btnCreateAfter_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(942, 616);
+            this.ClientSize = new System.Drawing.Size(1364, 616);
+            this.Controls.Add(this.btnCreateAfter);
+            this.Controls.Add(this.txtJsName);
+            this.Controls.Add(this.lblJsMode);
+            this.Controls.Add(this.txtServer);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtModelOne);
+            this.Controls.Add(this.lblModelOne);
             this.Controls.Add(this.lboxInfo);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtProjectDir);
-            this.Controls.Add(this.txtModuleCode);
-            this.Controls.Add(this.label8);
+            this.Controls.Add(this.txtModelTwo);
+            this.Controls.Add(this.lblModelTwo);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.lvTabeleName);
             this.Controls.Add(this.txtDbName);
@@ -209,9 +284,16 @@
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtProjectDir;
-        private System.Windows.Forms.TextBox txtModuleCode;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtModelTwo;
+        private System.Windows.Forms.Label lblModelTwo;
         private System.Windows.Forms.ListBox lboxInfo;
+        private System.Windows.Forms.TextBox txtModelOne;
+        private System.Windows.Forms.Label lblModelOne;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtServer;
+        private System.Windows.Forms.TextBox txtJsName;
+        private System.Windows.Forms.Label lblJsMode;
+        private System.Windows.Forms.Button btnCreateAfter;
     }
 }
 

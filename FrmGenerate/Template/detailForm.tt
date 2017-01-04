@@ -1,0 +1,64 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.detailForm", {
+    extend: "core.app.base.BaseForm",
+    alias: "widget.<#= entity.JsTwoDirName #>.detailform",
+    xtype: '<#= entity.JsTwoDirName #>deailform',
+    layout: "form", //从上往下布局
+    frame: true,
+    bodyPadding: '0 10 10 0',
+
+    fieldDefaults: { // 统一设置表单字段默认属性
+        labelSeparator: "：", // 分隔符
+        msgTarget: "qtip",
+        labelWidth: 100,
+        labelAlign: "right"
+    },
+    items: [{
+        fieldLabel: "主键",
+        name: "uuid",
+        xtype: "textfield",
+        hidden: true
+    } 
+<#  
+    //常规列的处理
+    foreach(EntityClassPropertyInfo property in entity.NormalColumnList)
+    { #>
+	, {
+        <# if (property.CanNull=="false") {#>
+	beforeLabelTextTpl: comm.get("required"),
+		allowBlank: false,
+		blankText: "<#= property.ColumnLabel #>不能为空",
+		<# }#>		
+		fieldLabel: "<#= property.ColumnLabel #>",
+        name: "<#= property.PropertyName#>",
+		xtype: "textfield",
+		emptyText: "请输入<#= property.ColumnLabel #>",
+        maxLength:<#= property.MaxLength #>,
+        maxLengthText:"最多<#= property.MaxLength #>个字符,汉字占2个字符"		
+    }
+<#  } #><#
+    //日期列的处理
+    foreach(EntityClassPropertyInfo property in entity.DateColumnList)
+    { #>
+	, {
+        <# if (property.CanNull=="false") {#>
+	beforeLabelTextTpl: comm.get("required"),
+		allowBlank: false,
+		blankText: "<#= property.ColumnLabel #>不能为空",
+		<# }#>        
+		fieldLabel: "<#= property.ColumnLabel #>",
+        name: "<#= property.PropertyName#>",
+        xtype: "datefield",
+        dateType: 'date',
+        format: "Y-m-d",
+		emptyText: "请选择<#= property.ColumnLabel #>",
+        maxLength:<#= property.MaxLength #>,
+        maxLengthText:"最多<#= property.MaxLength #>个字符,汉字占2个字符"			
+    }
+<#  } #>]
+});
+
