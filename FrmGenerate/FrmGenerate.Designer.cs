@@ -49,6 +49,7 @@
             this.txtJsName = new System.Windows.Forms.TextBox();
             this.lblJsMode = new System.Windows.Forms.Label();
             this.btnCreateAfter = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblUserName
@@ -83,7 +84,7 @@
             this.txtUserPwd.Name = "txtUserPwd";
             this.txtUserPwd.Size = new System.Drawing.Size(100, 21);
             this.txtUserPwd.TabIndex = 3;
-            this.txtUserPwd.Text = "A.b.c.d.1234";
+            this.txtUserPwd.Text = "sql2008";
             // 
             // btnConnect
             // 
@@ -101,7 +102,7 @@
             this.txtDbName.Name = "txtDbName";
             this.txtDbName.Size = new System.Drawing.Size(100, 21);
             this.txtDbName.TabIndex = 6;
-            this.txtDbName.Text = "sdfz_school";
+            this.txtDbName.Text = "dbZsdx_develop";
             // 
             // lblDbName
             // 
@@ -125,7 +126,7 @@
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(1142, 51);
+            this.btnCreate.Location = new System.Drawing.Point(1031, 49);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(75, 23);
             this.btnCreate.TabIndex = 8;
@@ -148,7 +149,7 @@
             this.txtProjectDir.Name = "txtProjectDir";
             this.txtProjectDir.Size = new System.Drawing.Size(203, 21);
             this.txtProjectDir.TabIndex = 26;
-            this.txtProjectDir.Text = "e:\\javacode\\sdfz_sdfz\\";
+            this.txtProjectDir.Text = "e:\\javacode\\zsdx_develop\\";
             // 
             // txtModelTwo
             // 
@@ -208,7 +209,7 @@
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(137, 21);
             this.txtServer.TabIndex = 32;
-            this.txtServer.Text = "11.35.189.6";
+            this.txtServer.Text = "(local)";
             // 
             // txtJsName
             // 
@@ -229,7 +230,7 @@
             // 
             // btnCreateAfter
             // 
-            this.btnCreateAfter.Location = new System.Drawing.Point(1031, 51);
+            this.btnCreateAfter.Location = new System.Drawing.Point(945, 51);
             this.btnCreateAfter.Name = "btnCreateAfter";
             this.btnCreateAfter.Size = new System.Drawing.Size(75, 23);
             this.btnCreateAfter.TabIndex = 35;
@@ -237,11 +238,22 @@
             this.btnCreateAfter.UseVisualStyleBackColor = true;
             this.btnCreateAfter.Click += new System.EventHandler(this.btnCreateAfter_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(1125, 49);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 36;
+            this.button1.Text = "生成新前端";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1364, 616);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnCreateAfter);
             this.Controls.Add(this.txtJsName);
             this.Controls.Add(this.lblJsMode);
@@ -294,6 +306,7 @@
         private System.Windows.Forms.TextBox txtJsName;
         private System.Windows.Forms.Label lblJsMode;
         private System.Windows.Forms.Button btnCreateAfter;
+        private System.Windows.Forms.Button button1;
     }
 }
 

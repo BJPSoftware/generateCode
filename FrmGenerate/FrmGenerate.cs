@@ -329,8 +329,10 @@ namespace GenerateCode
             serviceFileDir = projectDir + projectName + @"-service\src\main\java\" + PackageNameToDirName(servicePackageName);
             controllerFileDir = projectDir + projectName + @"-web\src\main\java\" + PackageNameToDirName(controllerPackageName);
             jsControllerFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\coreApp\" + txtModelOne.Text + @"\" + txtJsName.Text + @"\controller\"; //前端JS的controller层代码保存目录
-            jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\coreApp\"  +txtModelOne.Text + @"\" + txtJsName.Text + @"\view\"; //前端JS的view层代码保存目录
-    }
+            //jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\coreApp\"  +txtModelOne.Text + @"\" + txtJsName.Text + @"\view\"; //前端JS的view层代码保存目录
+            jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\app\" + txtModelOne.Text + @"\" + txtJsName.Text + @"\view\"; //新的前端JS的view层代码保存目录
+            //core\app\good\
+        }
 
         public string PackageNameToDirName(string packageName) {
             //将项目的包名转换成目录
@@ -492,6 +494,156 @@ namespace GenerateCode
                     }
                     File.WriteAllText(controllerFileDir + className + "Controller.java", codeController);
 
+                }
+                lboxInfo.Items.Add("全部所选数据表的代码生成完毕！");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("读取数据库失败！" + ex.Message);
+                return;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DbHelper dbHelper = new DbHelper(connString);
+            DataTable dtColumn = new DataTable();
+            if (lvTabeleName.CheckedItems.Count == 0)
+            {
+                MessageBox.Show("请选择要生成代码的数据表");
+                return;
+            }
+
+            lboxInfo.Items.Clear();
+
+            lboxInfo.Items.Add("正在初始化相关包名与目录...");
+            intPackageAndPath();
+            lboxInfo.Items.Add("初始化完成 OK");
+
+            string COLUMN_SQL = @"SELECT  
+                Name=a.name,
+                AutoIncrement=case   when   COLUMNPROPERTY(   a.id,a.name,'IsIdentity')=1   then   '是'else   '否'   end,
+                IsPK=case   when   exists(SELECT   1   FROM   sysobjects   where   xtype='PK'   and   name   in   (
+                SELECT   name   FROM   sysindexes   WHERE   indid   in(
+                SELECT   indid   FROM   sysindexkeys   WHERE   id   =   a.id   AND   colid=a.colid
+                )))   then   '是'   else   '否'   end,
+                DataType=b.name,
+                BitLenght=a.length,
+                MaxLength=COLUMNPROPERTY(a.id,a.name,'PRECISION'),
+                Digits=isnull(COLUMNPROPERTY(a.id,a.name,'Scale'),0),
+                CanNull=case   when   a.isnullable=1   then   '是'else   '否'   end,
+                DefaultValue=isnull(e.text,''),
+                Label=isnull(g.[value],'')
+                FROM   syscolumns   a
+                left   join   systypes   b   on   a.xusertype=b.xusertype
+                inner   join   sysobjects   d   on   a.id=d.id     and   d.xtype='U'   and     d.name<>'dtproperties'
+                left   join   syscomments   e   on   a.cdefault=e.id
+                left   join   sys.extended_properties   g   on   a.id=g.major_id   and   a.colid=g.minor_id
+                left   join   sys.extended_properties   f   on   d.id=f.major_id   and   f.minor_id=0
+                where   d.name='{0}' 
+                order   by   a.id,a.colorder
+            ";
+            string selTableName = string.Empty;
+            string selTableComm = string.Empty;
+            string tempClassName = string.Empty;
+            string className = string.Empty;
+            //定义要生成的实体中需要排除的列
+            //主要是业务实体继承了基实体，在业务实体中就不需要再生成这些字段的映射了
+            string excludes = "CREATE_TIME,CREATE_USER,UPDATE_TIME,UPDATE_USER,VERSION,ISDELETE,ORDER_INDEX,EXT_FIELD01,EXT_FIELD02,EXT_FIELD03,EXT_FIELD04,EXT_FIELD05,NODE_LAYER,NODE_INFO,NODE_TYPE,NODE_INFOTYPE";
+            try
+            {
+                for (int i = 0; i < lvTabeleName.CheckedItems.Count; i++)
+                {
+                    selTableName = lvTabeleName.CheckedItems[i].Tag.ToString();
+                    selTableComm = lvTabeleName.CheckedItems[i].Text.ToString();
+
+                    lboxInfo.Items.Add("处理数据表" + selTableComm + "的相关信息...");
+
+                    dtColumn = dbHelper.Fill(string.Format(COLUMN_SQL, selTableName));
+                    EntityClassInfo entityInfo = new EntityClassInfo();
+                    entityInfo.tableName = selTableName;
+                    entityInfo.tableComment = selTableComm;
+                    tempClassName = ConvertHelper.SplitAndToFirstUpper(selTableName, '_');
+                    className = tempClassName.Substring(0, 1).ToUpper() + tempClassName.Substring(1, tempClassName.Length - 1);
+                    entityInfo.className = className;
+                    entityInfo.packageName = modelPackageName;
+                    entityInfo.daoPackageName = daoPackageName;
+                    entityInfo.servicePackageName = servicePackageName;
+                    entityInfo.controllerPackageName = controllerPackageName;
+                    entityInfo.dataTable = dtColumn;
+                    entityInfo.codeLanguage = codeLanguage.Java;
+                    entityInfo.excludes = excludes;
+                    entityInfo.JsOneDirName = txtModelOne.Text;
+                    entityInfo.JsTwoDirName = txtJsName.Text;
+
+                    string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
+                    entityInfo.createColumnInfo();
+
+
+                    ////生成前端JSController接口实现层代码
+                    //lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端controller层代码...");
+                    //String JsTemplateController = ConfigurationManager.AppSettings["TemplateJsController"].ToString();
+                    //String JsController = CreateCode.CreateEntityClass(entityInfo, JsTemplateController);
+                    ////String controller = serviceFileDir + @"\Impl\";
+                    ////rtboxView.AppendText(codeServiceImpl);
+
+                    //if (!Directory.Exists(jsControllerFileDir))
+                    //{
+                    //    Directory.CreateDirectory(jsControllerFileDir);
+                    //}
+                    //File.WriteAllText(jsControllerFileDir + "MainController.js", JsController);
+
+                    //生成前端TemplateJsViewMain接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端mainlayout代码...");
+                    String TemplateJsViewMain = ConfigurationManager.AppSettings["TemplateJsViewMain"].ToString();
+                    String codeTemplateJsViewMain = CreateCode.CreateEntityClass(entityInfo, TemplateJsViewMain);
+                    //String controller = serviceFileDir + @"\Impl\";
+                    //rtboxView.AppendText(codeServiceImpl);
+
+                    if (!Directory.Exists(jsViewFileDir))
+                    {
+                        Directory.CreateDirectory(jsViewFileDir);
+                    }
+                    File.WriteAllText(jsViewFileDir + "MainLayout.js", codeTemplateJsViewMain);
+
+                    //生成前端TemplateJsViewMain接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端grid代码...");
+                    String TemplateJsViewGrid = ConfigurationManager.AppSettings["TemplateJsViewGrid"].ToString();
+                    String codeTemplateJsViewGrid = CreateCode.CreateEntityClass(entityInfo, TemplateJsViewGrid);
+                    //String controller = serviceFileDir + @"\Impl\";
+                    //rtboxView.AppendText(codeServiceImpl);
+
+                    if (!Directory.Exists(jsViewFileDir))
+                    {
+                        Directory.CreateDirectory(jsViewFileDir);
+                    }
+                    File.WriteAllText(jsViewFileDir + "MainGrid.js", codeTemplateJsViewGrid);
+
+                    ////生成前端TemplateJsViewMain接口实现层代码
+                    //lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端controller层代码...");
+                    //String TemplateJsViewDetail = ConfigurationManager.AppSettings["TemplateJsViewDetail"].ToString();
+                    //String codeTemplateJsViewDetail = CreateCode.CreateEntityClass(entityInfo, TemplateJsViewDetail);
+                    ////String controller = serviceFileDir + @"\Impl\";
+                    ////rtboxView.AppendText(codeServiceImpl);
+
+                    //if (!Directory.Exists(jsViewFileDir))
+                    //{
+                    //    Directory.CreateDirectory(jsViewFileDir);
+                    //}
+                    //File.WriteAllText(jsViewFileDir + "detailLayout.js", codeTemplateJsViewDetail);
+
+                    ////生成前端TemplateJsViewMain接口实现层代码
+                    //lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端controller层代码...");
+                    //String TemplateJsViewform = ConfigurationManager.AppSettings["TemplateJsViewform"].ToString();
+                    //String codeTemplateJsViewform = CreateCode.CreateEntityClass(entityInfo, TemplateJsViewform);
+                    ////String controller = serviceFileDir + @"\Impl\";
+                    ////rtboxView.AppendText(codeServiceImpl);
+
+                    //if (!Directory.Exists(jsViewFileDir))
+                    //{
+                    //    Directory.CreateDirectory(jsViewFileDir);
+                    //}
+                    //File.WriteAllText(jsViewFileDir + "detailForm.js", codeTemplateJsViewform);
                 }
                 lboxInfo.Items.Add("全部所选数据表的代码生成完毕！");
             }
