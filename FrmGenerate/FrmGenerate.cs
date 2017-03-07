@@ -328,9 +328,23 @@ namespace GenerateCode
             daoFileDir = projectDir + projectName + @"-dao\src\main\java\" + PackageNameToDirName(daoPackageName);
             serviceFileDir = projectDir + projectName + @"-service\src\main\java\" + PackageNameToDirName(servicePackageName);
             controllerFileDir = projectDir + projectName + @"-web\src\main\java\" + PackageNameToDirName(controllerPackageName);
-            jsControllerFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\coreApp\" + txtModelOne.Text + @"\" + txtJsName.Text + @"\controller\"; //前端JS的controller层代码保存目录
+            if (txtModelTwo.Text == "")
+            {
+                jsControllerFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\coreApp\" + txtModelOne.Text + @"\" + txtJsName.Text + @"\controller\"; //前端JS的controller层代码保存目录
+                                                                                                                                                                            //jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\coreApp\"  +txtModelOne.Text + @"\" + txtJsName.Text + @"\view\"; //前端JS的view层代码保存目录
+                jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\app\" + txtModelOne.Text + @"\" + txtJsName.Text + @"\view\"; //新的前端JS的view层代码保存目录
+            }
+            else
+            {
+                jsControllerFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\app\" + txtModelOne.Text  + @"\" + txtModelTwo.Text + @"\" + txtJsName.Text + @"\controller\"; //前端JS的controller层代码保存目录
+                                                                                                                                                                            //jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\coreApp\"  +txtModelOne.Text + @"\" + txtJsName.Text + @"\view\"; //前端JS的view层代码保存目录
+                jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\app\" + txtModelOne.Text + @"\" + txtModelTwo.Text + @"\" + txtJsName.Text + @"\view\"; //新的前端JS的view层代码保存目录
+
+            }
+
+            //jsControllerFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\coreApp\" + txtModelOne.Text + @"\" + txtJsName.Text + @"\controller\"; //前端JS的controller层代码保存目录
             //jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\coreApp\"  +txtModelOne.Text + @"\" + txtJsName.Text + @"\view\"; //前端JS的view层代码保存目录
-            jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\app\" + txtModelOne.Text + @"\" + txtJsName.Text + @"\view\"; //新的前端JS的view层代码保存目录
+            //jsViewFileDir = projectDir + projectName + @"-web\src\main\webapp\static\core\app\" + txtModelOne.Text + @"\" + txtJsName.Text + @"\view\"; //新的前端JS的view层代码保存目录
             //core\app\good\
         }
 
@@ -417,6 +431,7 @@ namespace GenerateCode
                     entityInfo.codeLanguage = codeLanguage.Java;
                     entityInfo.excludes = excludes;
                     entityInfo.JsOneDirName = txtModelOne.Text;
+                    entityInfo.JsTwoDirName = txtModelTwo.Text;
                     entityInfo.JsTwoDirName = txtJsName.Text;
 
                     string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
@@ -574,24 +589,51 @@ namespace GenerateCode
                     entityInfo.codeLanguage = codeLanguage.Java;
                     entityInfo.excludes = excludes;
                     entityInfo.JsOneDirName = txtModelOne.Text;
-                    entityInfo.JsTwoDirName = txtJsName.Text;
+                    entityInfo.JsTwoDirName = txtModelTwo.Text;
+                    entityInfo.JsTwoThreeName = txtJsName.Text;
 
                     string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
                     entityInfo.createColumnInfo();
 
 
-                    ////生成前端JSController接口实现层代码
-                    //lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端controller层代码...");
-                    //String JsTemplateController = ConfigurationManager.AppSettings["TemplateJsController"].ToString();
-                    //String JsController = CreateCode.CreateEntityClass(entityInfo, JsTemplateController);
-                    ////String controller = serviceFileDir + @"\Impl\";
-                    ////rtboxView.AppendText(codeServiceImpl);
+                    //生成前端JSController接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端maincontroller层代码...");
+                    String JsTemplateController = ConfigurationManager.AppSettings["TemplateJsController"].ToString();
+                    String JsController = CreateCode.CreateEntityClass(entityInfo, JsTemplateController);
+                    //String controller = serviceFileDir + @"\Impl\";
+                    //rtboxView.AppendText(codeServiceImpl);
 
-                    //if (!Directory.Exists(jsControllerFileDir))
-                    //{
-                    //    Directory.CreateDirectory(jsControllerFileDir);
-                    //}
-                    //File.WriteAllText(jsControllerFileDir + "MainController.js", JsController);
+                    if (!Directory.Exists(jsControllerFileDir))
+                    {
+                        Directory.CreateDirectory(jsControllerFileDir);
+                    }
+                    File.WriteAllText(jsControllerFileDir + "MainController.js", JsController);
+
+                    ////生成前端JSController接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端othercontroller层代码...");
+                    String JsTemplateotherController = ConfigurationManager.AppSettings["TemplateJsotherController"].ToString();
+                    String JsotherController = CreateCode.CreateEntityClass(entityInfo, JsTemplateotherController);
+                    //String controller = serviceFileDir + @"\Impl\";
+                    //rtboxView.AppendText(codeServiceImpl);
+
+                    if (!Directory.Exists(jsControllerFileDir))
+                    {
+                        Directory.CreateDirectory(jsControllerFileDir);
+                    }
+                    File.WriteAllText(jsControllerFileDir + "OtherController.js", JsotherController);
+
+                    //生成前端JSController接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端detailcontroller层代码...");
+                    String JsTemplatedetailController = ConfigurationManager.AppSettings["TemplateJsdetailController"].ToString();
+                    String JsdetailController = CreateCode.CreateEntityClass(entityInfo, JsTemplatedetailController);
+                    //String controller = serviceFileDir + @"\Impl\";
+                    //rtboxView.AppendText(codeServiceImpl);
+
+                    if (!Directory.Exists(jsControllerFileDir))
+                    {
+                        Directory.CreateDirectory(jsControllerFileDir);
+                    }
+                    File.WriteAllText(jsControllerFileDir + "DetailController.js", JsdetailController);
 
                     //生成前端TemplateJsViewMain接口实现层代码
                     lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端mainlayout代码...");
@@ -619,31 +661,44 @@ namespace GenerateCode
                     }
                     File.WriteAllText(jsViewFileDir + "MainGrid.js", codeTemplateJsViewGrid);
 
-                    ////生成前端TemplateJsViewMain接口实现层代码
-                    //lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端controller层代码...");
-                    //String TemplateJsViewDetail = ConfigurationManager.AppSettings["TemplateJsViewDetail"].ToString();
-                    //String codeTemplateJsViewDetail = CreateCode.CreateEntityClass(entityInfo, TemplateJsViewDetail);
-                    ////String controller = serviceFileDir + @"\Impl\";
-                    ////rtboxView.AppendText(codeServiceImpl);
+                    //生成前端TemplateJsViewMain接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端detaillayout层代码...");
+                    String TemplateJsViewDetail = ConfigurationManager.AppSettings["TemplateJsViewDetail"].ToString();
+                    String codeTemplateJsViewDetail = CreateCode.CreateEntityClass(entityInfo, TemplateJsViewDetail);
+                    //String controller = serviceFileDir + @"\Impl\";
+                    //rtboxView.AppendText(codeServiceImpl);
 
-                    //if (!Directory.Exists(jsViewFileDir))
-                    //{
-                    //    Directory.CreateDirectory(jsViewFileDir);
-                    //}
-                    //File.WriteAllText(jsViewFileDir + "detailLayout.js", codeTemplateJsViewDetail);
+                    if (!Directory.Exists(jsViewFileDir))
+                    {
+                        Directory.CreateDirectory(jsViewFileDir);
+                    }
+                    File.WriteAllText(jsViewFileDir + "DetailLayout.js", codeTemplateJsViewDetail);
 
-                    ////生成前端TemplateJsViewMain接口实现层代码
-                    //lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端controller层代码...");
-                    //String TemplateJsViewform = ConfigurationManager.AppSettings["TemplateJsViewform"].ToString();
-                    //String codeTemplateJsViewform = CreateCode.CreateEntityClass(entityInfo, TemplateJsViewform);
-                    ////String controller = serviceFileDir + @"\Impl\";
-                    ////rtboxView.AppendText(codeServiceImpl);
+                    //生成前端TemplateJsViewMain接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端detailform层代码...");
+                    String TemplateJsViewform = ConfigurationManager.AppSettings["TemplateJsViewform"].ToString();
+                    String codeTemplateJsViewform = CreateCode.CreateEntityClass(entityInfo, TemplateJsViewform);
+                    //String controller = serviceFileDir + @"\Impl\";
+                    //rtboxView.AppendText(codeServiceImpl);
 
-                    //if (!Directory.Exists(jsViewFileDir))
-                    //{
-                    //    Directory.CreateDirectory(jsViewFileDir);
-                    //}
-                    //File.WriteAllText(jsViewFileDir + "detailForm.js", codeTemplateJsViewform);
+                    if (!Directory.Exists(jsViewFileDir))
+                    {
+                        Directory.CreateDirectory(jsViewFileDir);
+                    }
+                    File.WriteAllText(jsViewFileDir + "DetailForm.js", codeTemplateJsViewform);
+
+                    //生成前端TemplateJsViewMain接口实现层代码
+                    lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端querypanel层代码...");
+                    String TemplateJsqueryform = ConfigurationManager.AppSettings["TemplateJsViewquerypanel"].ToString();
+                    String codeTemplateJqueryform = CreateCode.CreateEntityClass(entityInfo, TemplateJsqueryform);
+                    //String controller = serviceFileDir + @"\Impl\";
+                    //rtboxView.AppendText(codeServiceImpl);
+
+                    if (!Directory.Exists(jsViewFileDir))
+                    {
+                        Directory.CreateDirectory(jsViewFileDir);
+                    }
+                    File.WriteAllText(jsViewFileDir + "MainQueryPanel.js", codeTemplateJqueryform);
                 }
                 lboxInfo.Items.Add("全部所选数据表的代码生成完毕！");
             }
