@@ -3,8 +3,8 @@
 <#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
 <#@ import namespace="BJP.Framework.Code" #>
 <#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
-Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.listGrid", {
-    extend: "core.app.base.BaseGrid",
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.MainGrid", {
+    extend: "core..base.BaseGrid",
     alias: "widget.<#= entity.JsTwoDirName #>.grid",
     dataUrl: comm.get("baseUrl") + "/<#= entity.className #>/list", //数据获取地址
     model: "<#= entity.packageName #>.<#= entity.className #>", //对应的数据模型

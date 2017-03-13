@@ -1,0 +1,121 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+<# if (entity.JsTwoThreeName=="") {#>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.DetailForm", {
+    extend: "core.base.view.BaseForm",
+    alias: "widget.<#= entity.JsTwoDirName #>.detailform",
+    xtype: '<#= entity.JsTwoDirName #>deailform',
+<#} else {#>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.view.DetailForm", {
+    extend: "core.base.view.BaseForm",
+    alias: "widget.<#= entity.JsTwoThreeName #>.detailform",
+    xtype: '<#= entity.JsTwoThreeName #>deailform',
+<# }#>
+    layout: "form", //从上往下布局
+    autoHeight: true,
+    frame: false,
+    //bodyPadding: '0 10 10 0',
+    fieldDefaults: { // 统一设置表单字段默认属性
+        labelSeparator: "：", // 分隔符
+        msgTarget: "qtip",
+        labelWidth: 100,
+        labelAlign: "right"
+    },
+    items: [{
+        fieldLabel: "主键",
+        name: "uuid",
+        xtype: "textfield",
+        hidden: true
+    }<# int i=0; foreach(EntityClassPropertyInfo property in entity.NormalColumnList){ if (i %2==0) {#>,{
+        xtype: "container",
+        layout: "column",
+        labelAlign: "right",
+		items:[{
+        <# if (property.canNull==1) {#>beforeLabelTextTpl: comm.get("required"),
+		allowBlank: false,
+		blankText: "<#= property.colName #>不能为空",<# }#>		
+		fieldLabel: "<#= property.colName #>",
+		columnWidth: 0.5,
+        name: "<#= property.propertyName #>",
+<#switch(property.inputType){
+case "dic": #>
+       xtype: "basecombobox",
+       ddCode: "<#= property.dicCode #>",
+<#	break;
+case "datetime": #>
+            xtype: "datetimefield",
+            dateType: 'datetime',
+            format: "Y-m-d H:i:s",
+<#				break;
+case "date": #>
+            xtype: "datetimefield",
+            dateType: 'date',
+            format: "Y-m-d",
+<#				break;
+case "time": #>
+            xtype: "datetimefield",
+            dateType: 'time',
+            format: "H:i:s",
+<#				break;
+case "dit": #>
+            xtype: "numberfield",
+<#				break;
+case "checkbox": #>
+            xtype: "checkbox",
+			boxLabel:"<#= property.dicCode #>",
+<#				break;
+default: #>
+            xtype: "textfield",
+<#				break;
+} #>	
+		emptyText: "请输入<#= property.colName #>",
+        maxLength:<#= property.colLength #>,
+        maxLengthText:"最多<#= property.colLength #>个字符,汉字占2个字符",	
+    }
+<#  } else {#>,{ <# if (property.canNull==1) {#>beforeLabelTextTpl: comm.get("required"),
+		allowBlank: false,
+		blankText: "<#= property.colName #>不能为空",<# }#>		
+		fieldLabel: "<#= property.colName #>",
+        columnWidth: 0.5,
+        name: "<#= property.propertyName #>",
+<#switch(property.inputType){
+case "dic": #>
+       xtype: "basecombobox",
+       ddCode: "<#= property.dicCode #>",
+<#	break;
+case "datetime": #>
+            xtype: "datetimefield",
+            dateType: 'datetime',
+            format: "Y-m-d H:i:s",
+<#				break;
+case "date": #>
+            xtype: "datetimefield",
+            dateType: 'date',
+            format: "Y-m-d",
+<#				break;
+case "time": #>
+            xtype: "datetimefield",
+            dateType: 'time',
+            format: "H:i:s",
+<#				break;
+case "dit": #>
+            xtype: "numberfield",
+<#				break;
+case "checkbox": #>
+            xtype: "checkbox",
+			boxLabel:"<#= property.dicCode #>",
+<#				break;
+default: #>
+            xtype: "textfield",
+<#				break;
+} #>	
+		emptyText: "请输入<#= property.colName #>",
+        maxLength:<#= property.colLength #>,
+        maxLengthText:"最多<#= property.colLength #>个字符,汉字占2个字符",
+		}]
+	}<# } i++;} #>]
+});
+

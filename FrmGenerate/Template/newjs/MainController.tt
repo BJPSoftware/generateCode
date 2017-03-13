@@ -1,0 +1,63 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+<# if (entity.JsTwoThreeName=="") {#>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.controller.MainController", {
+    extend: "Ext.app.ViewController",
+    alias: 'controller.<#= entity.JsTwoDirName #>.mainController',
+<#} else {#>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.controller.MainController", {
+    extend: "Ext.app.ViewController",
+    alias: 'controller.<#= entity.JsTwoThreeName #>.mainController',
+<#}#>
+    mixins: {
+        /*
+        suppleUtil: "core.util.SuppleUtil",
+        messageUtil: "core.util.MessageUtil",
+        formUtil: "core.util.FormUtil",
+        gridActionUtil: "core.util.GridActionUtil",
+        dateUtil: 'core.util.DateUtil'
+        */
+    },
+    init: function() {
+    },
+    control: {
+        "basegrid button[ref=gridAdd]": {
+            beforeclick: function(btn) {
+                console.log(btn);
+                //return false;
+            }
+        },
+
+        "basegrid button[ref=gridDetail]": {
+            beforeclick: function(btn) {
+                console.log(btn);
+                //return false;
+            }
+        },
+
+        "basegrid button[ref=gridEdit]": {
+            beforeclick: function(btn) {
+                console.log(btn);
+                //return false;
+            }
+        },
+
+        "basegrid  actioncolumn": {
+            editClick: function(data) {
+                console.log(data);
+
+            },
+            detailClick: function(data) {
+                console.log(data);
+
+            },
+            deleteClick: function(data) {
+                console.log(data);
+
+            },
+        }
+    }   
+});

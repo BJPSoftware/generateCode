@@ -1,0 +1,82 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+<# if (entity.JsTwoThreeName=="") {#>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.MainLayout", {
+    extend: "core.base.view.BasePanel",
+    alias: "widget.<#= entity.JsTwoDirName #>.mainlayout",
+    /** 引入必须的文件 */
+    requires: [ 
+        'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.controller.MainController',
+        //'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.model.MainGridModel',
+        //'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.store.MainGridStore', 
+        'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.MainGrid',
+        'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.MainQueryPanel',
+        "core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.DetailLayout",
+    ],    
+    /** 关联此视图控制器 */
+    controller: '<#= entity.JsTwoDirName #>.mainController',
+    /** 页面代码定义 */
+    funCode: "<#= entity.JsTwoDirName #>_main",
+    detCode: "<#= entity.JsTwoDirName #>_detail",
+    detLayout: "<#= entity.JsTwoDirName #>.detaillayout",
+    /*标注这个视图控制器的别名，以此提供给window处使用*/
+    otherController:'<#= entity.JsTwoDirName #>.otherController',
+    layout:'border',
+    border:false,
+    funData: {
+        action: comm.get("baseUrl") + "/<#= entity.className #>", //请求Action
+        whereSql: "", //表格查询条件
+        orderSql: "", //表格排序条件
+        filter: "",
+        pkName: "uuid",
+        width: 600,
+        height: 600,
+        defaultObj: {},
+    },
+    items: [{
+            xtype: "<#= entity.JsTwoDirName #>.maingrid",
+            region: "center"
+    }]
+})
+<# } else {#>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.view.MainLayout", {
+    extend: "core.base.view.BasePanel",
+    alias: "widget.<#= entity.JsTwoThreeName #>.mainlayout",
+    /** 引入必须的文件 */
+    requires: [ 
+        'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.controller.MainController',
+        //'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.model.MainGridModel',
+        //'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.store.MainGridStore', 
+        'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.view.MainGrid',
+        'core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.view.MainQueryPanel',
+        "core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.view.DetailLayout",
+    ],    
+    /** 关联此视图控制器 */
+    controller: '<#= entity.JsTwoThreeName #>.mainController',
+    /** 页面代码定义 */
+    funCode: "<#= entity.JsTwoThreeName #>_main",
+    detCode: "<#= entity.JsTwoThreeName #>_detail",
+    detLayout: "<#= entity.JsTwoThreeName #>.detaillayout",
+    /*标注这个视图控制器的别名，以此提供给window处使用*/
+    otherController:'<#= entity.JsTwoThreeName #>.otherController',
+    layout:'border',
+    border:false,
+    funData: {
+        action: comm.get("baseUrl") + "/<#= entity.className #>", //请求Action
+        whereSql: "", //表格查询条件
+        orderSql: "", //表格排序条件
+        filter: "",
+        pkName: "uuid",
+        width: 700,
+        height: 800,
+        defaultObj: {},
+    },
+    items: [{
+            xtype: "<#= entity.JsTwoThreeName #>.maingrid",
+            region: "center"
+    }]
+})
+<#}#>

@@ -34,8 +34,8 @@ import <#= entity.servicePackageName #>.<#= entity.className #>Service ;
 /**
  * 
  * ClassName: <#= entity.className #>Controller
- * Function: TODO ADD FUNCTION. 
- * Reason: TODO ADD REASON(可选). 
+ * Function:  ADD FUNCTION. 
+ * Reason:  ADD REASON(可选). 
  * Description: <#= entity.tableComment #>实体Controller.
  * date: <#= System.DateTime.Now.ToString("yyyy-MM-dd") #>
  *
@@ -50,17 +50,14 @@ public class <#= entity.className #>Controller extends FrameWorkController<<#= e
     @Resource
     <#= entity.className #>Service thisService; // service层接口
 
-
     /**
-      * list查询
       * @Title: list
-      * @Description: TODO
-      * @param @param entity 实体类
-      * @param @param request
-      * @param @param response
-      * @param @throws IOException    设定参数
+      * @Description: 查询数据列表
+      * @param entity 实体类
+      * @param request
+      * @param response
+      * @throws IOException    设定参数
       * @return void    返回类型
-      * @throws
      */
     @RequestMapping(value = { "/list" }, method = { org.springframework.web.bind.annotation.RequestMethod.GET,
             org.springframework.web.bind.annotation.RequestMethod.POST })
@@ -78,14 +75,13 @@ public class <#= entity.className #>Controller extends FrameWorkController<<#= e
 
     /**
      * 
-      * @Title: 增加新实体信息至数据库
-      * @Description: TODO
-      * @param @param <#= entity.className #> 实体类
-      * @param @param request
-      * @param @param response
-      * @param @throws IOException    设定参数
+      * @Title: doadd
+      * @Description: 增加新实体信息至数据库
+      * @param <#= entity.className #> 实体类
+      * @param request
+      * @param response
       * @return void    返回类型
-      * @throws
+      * @throws IOException    抛出异常
      */
     @RequestMapping("/doadd")
     public void doAdd(<#= entity.className #> entity, HttpServletRequest request, HttpServletResponse response)
@@ -107,14 +103,13 @@ public class <#= entity.className #>Controller extends FrameWorkController<<#= e
     }
 
     /**
-      * doDelete
-      * @Title: 逻辑删除指定的数据
-      * @Description: TODO
-      * @param @param request
-      * @param @param response
-      * @param @throws IOException    设定参数
+      * 
+      * @Title: doDelete
+      * @Description: 逻辑删除指定的数据
+      * @param request
+      * @param response
       * @return void    返回类型
-      * @throws
+      * @throws IOException  抛出异常
      */
     @RequestMapping("/dodelete")
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -137,15 +132,13 @@ public class <#= entity.className #>Controller extends FrameWorkController<<#= e
         }
     }
     /**
-     * doUpdate编辑记录
      * @Title: doUpdate
-     * @Description: TODO
-     * @param @param <#= entity.className #>
-     * @param @param request
-     * @param @param response
-     * @param @throws IOException    设定参数
+     * @Description: 编辑指定记录
+     * @param <#= entity.className #>
+     * @param request
+     * @param response
      * @return void    返回类型
-     * @throws
+     * @throws IOException  抛出异常
     */
     @RequestMapping("/doupdate")
     public void doUpdates(<#= entity.className #> entity, HttpServletRequest request, HttpServletResponse response)
@@ -164,6 +157,5 @@ public class <#= entity.className #>Controller extends FrameWorkController<<#= e
 		} catch (Exception e) {
 			writeJSON(response, jsonBuilder.returnFailureJson("'数据修改失败,详情见错误日志'"));
 		}
-
     }
 }

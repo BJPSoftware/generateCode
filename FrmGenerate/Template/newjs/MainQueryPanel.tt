@@ -1,0 +1,159 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".java" #>
+<#@ assembly name="$(TargetDir)BJP.Framework.dll" #>
+<#@ import namespace="BJP.Framework.Code" #>
+<#@ parameter type="BJP.Framework.Code.EntityClassInfo" name="entity" #>
+<# if (entity.JsTwoThreeName=="") {#>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.view.MainQueryPanel", {
+	extend:"core.base.view.BaseQueryForm",
+	alias: "widget.<#= entity.JsTwoDirName #>.mainquerypanel",
+    layout: "form",
+    frame: false,
+	height: 180,
+	items:[
+<#			int i=0;					foreach(EntityClassPropertyInfo property in entity.expertQueryColumnList){ if (i %2==0) { #>{
+		xtype: "container",
+        layout: "column",
+		items:[{
+			//columnWidth: 0.5,
+			labelAlign: "right",
+			xtype: "basequeryfield",
+			name: "<#= property.propertyName#>",
+			fieldLabel: "<#= property.colName #>",
+			queryType: "textfield",
+<#switch(property.inputType){
+	case "dic":#>
+        queryType: "basecombobox",
+        config: {
+            ddCode: "<#= property.dicCode #>"
+        },
+<#
+	break;
+	case "date":
+	case "time":
+	case "datetime": #>
+		queryType: "datetimefield",
+<#
+	break;
+default:#>
+		queryType: "textfield",
+<# break;
+} #>
+        }
+<#} else {#>,{
+			//columnWidth: 0.5,
+			labelAlign: "right",
+			xtype: "basequeryfield",
+			name: "<#= property.propertyName#>",
+			fieldLabel: "<#= property.colName #>",
+			queryType: "textfield",
+<#switch(property.inputType){
+	case "dic":#>
+        queryType: "basecombobox",
+        config: {
+            ddCode: "<#= property.dicCode #>"
+        },
+<#
+	break;
+	case "date":
+	case "time":
+	case "datetime": #>
+		queryType: "datetimefield",
+<#
+	break;
+default:#>
+		queryType: "textfield",
+<# break;
+} #>
+
+        }]},<#} i++; } #>],
+    buttonAlign: "center",
+    buttons: [{
+        xtype: 'button',
+        text: '搜 索',
+        ref: 'gridSearchFormOk',
+        iconCls: 'x-fa fa-search',
+    }, {
+        xtype: 'button',
+        text: '重 置',
+        ref: 'gridSearchFormReset',
+        iconCls: 'x-fa fa-undo',
+    }]
+});
+<#} else {#>
+Ext.define("core.<#= entity.JsOneDirName #>.<#= entity.JsTwoDirName #>.<#= entity.JsTwoThreeName #>.view.MainQueryPanel", {
+	extend:"core.base.view.BaseQueryForm",
+	alias: "widget.<#= entity.JsTwoThreeName #>.mainquerypanel",
+    layout: "form",
+    frame: false,
+	height: 180,
+    items: [
+<#		int i=0;				foreach(EntityClassPropertyInfo property in entity.expertQueryColumnList){if (i %2==0){#>{
+		xtype: "container",
+        layout: "column",
+		items:[{
+			//columnWidth: 0.5,
+			labelAlign: "right",
+			xtype: "basequeryfield",
+			name: "<#= property.propertyName#>",
+			fieldLabel: "<#= property.colName #>",
+<#switch(property.inputType){
+	case "dic":#>
+        queryType: "basecombobox",
+        config: {
+            ddCode: "<#= property.dicCode #>"
+        },
+<#
+	break;
+	case "date":
+	case "time":
+	case "datetime": #>
+		queryType: "datetimefield",
+<#
+	break;
+default:#>
+		queryType: "textfield",
+<# break;
+} #>
+        }
+<#} else {#>,{
+			//columnWidth: 0.5,
+			labelAlign: "right",
+			xtype: "basequeryfield",
+			name: "<#= property.propertyName#>",
+			fieldLabel: "<#= property.colName #>",
+<#switch(property.inputType){
+	case "dic":#>
+        queryType: "basecombobox",
+        config: {
+            ddCode: "<#= property.dicCode #>"
+        },
+<#
+	break;
+	case "date":
+	case "time":
+	case "datetime": #>
+		queryType: "datetimefield",
+<#
+	break;
+default :#>
+	queryType: "textfield",
+<#
+	break;
+} #>
+
+        }]},<#} i++; } #>]}],
+    buttonAlign: "center",
+    buttons: [{
+        xtype: 'button',
+        text: '搜 索',
+        ref: 'gridSearchFormOk',
+        iconCls: 'x-fa fa-search',
+    }, {
+        xtype: 'button',
+        text: '重 置',
+        ref: 'gridSearchFormReset',
+        iconCls: 'x-fa fa-undo',
+    }]
+});
+<#}#>

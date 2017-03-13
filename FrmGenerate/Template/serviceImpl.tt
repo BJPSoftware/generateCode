@@ -28,8 +28,8 @@ import <#= entity.servicePackageName #>.<#= entity.className #>Service ;
 /**
  * 
  * ClassName: <#= entity.className #>ServiceImpl
- * Function: TODO ADD FUNCTION. 
- * Reason: TODO ADD REASON(可选). 
+ * Function:  ADD FUNCTION. 
+ * Reason:  ADD REASON(可选). 
  * Description: <#= entity.tableComment #>实体Service接口实现类.
  * date: <#= System.DateTime.Now.ToString("yyyy-MM-dd") #>
  *
