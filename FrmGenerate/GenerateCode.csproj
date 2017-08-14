@@ -96,12 +96,6 @@
     <Folder Include="bin\Debug\Template\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\framework\BJP.Framework\BJP.Framework.csproj">
-      <Project>{214f155e-8cce-49b0-85b6-6caa0904a86c}</Project>
-      <Name>BJP.Framework</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Template\controller.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>controller.java</LastGenOutput>
