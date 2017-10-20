@@ -10,7 +10,7 @@ using BJP.Framework.Code;
 
 namespace GenerateCode
 {
-    public partial class frmMain : Form
+    public partial class FrmGenerate : Form
     {
         public string connString = string.Empty;
 
@@ -26,7 +26,7 @@ namespace GenerateCode
         public string jsControllerFileDir = string.Empty; //前端JS的controller层代码保存目录
         public string jsViewFileDir = string.Empty; //前端JS的view层代码保存目录
 
-        public frmMain()
+        public FrmGenerate()
         {
             InitializeComponent();
         }
@@ -140,8 +140,8 @@ namespace GenerateCode
                     entityInfo.dataTable = dtColumn;
                     entityInfo.codeLanguage = codeLanguage.Java;
                     entityInfo.excludes = excludes;
-                    entityInfo.JsOneDirName = txtModelOne.Text;
-                    entityInfo.JsTwoDirName = txtJsName.Text;
+                    //entityInfo.JsOneDirName = txtModelOne.Text;
+                    //entityInfo.JsTwoDirName = txtJsName.Text;
 
                     string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
                     entityInfo.createColumnInfo();
@@ -430,9 +430,9 @@ namespace GenerateCode
                     entityInfo.dataTable = dtColumn;
                     entityInfo.codeLanguage = codeLanguage.Java;
                     entityInfo.excludes = excludes;
-                    entityInfo.JsOneDirName = txtModelOne.Text;
-                    entityInfo.JsTwoDirName = txtModelTwo.Text;
-                    entityInfo.JsTwoDirName = txtJsName.Text;
+                    //entityInfo.JsOneDirName = txtModelOne.Text;
+                    //entityInfo.JsTwoDirName = txtModelTwo.Text;
+                    //entityInfo.JsTwoDirName = txtJsName.Text;
 
                     string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
                     entityInfo.createColumnInfo();
@@ -535,31 +535,29 @@ namespace GenerateCode
             intPackageAndPath();
             lboxInfo.Items.Add("初始化完成 OK");
 
-            //string COLUMN_SQL = @"SELECT  
-            //    Name=a.name,
-            //    AutoIncrement=case   when   COLUMNPROPERTY(   a.id,a.name,'IsIdentity')=1   then   '是'else   '否'   end,
-            //    IsPK=case   when   exists(SELECT   1   FROM   sysobjects   where   xtype='PK'   and   name   in   (
-            //    SELECT   name   FROM   sysindexes   WHERE   indid   in(
-            //    SELECT   indid   FROM   sysindexkeys   WHERE   id   =   a.id   AND   colid=a.colid
-            //    )))   then   '是'   else   '否'   end,
-            //    DataType=b.name,
-            //    BitLenght=a.length,
-            //    MaxLength=COLUMNPROPERTY(a.id,a.name,'PRECISION'),
-            //    Digits=isnull(COLUMNPROPERTY(a.id,a.name,'Scale'),0),
-            //    CanNull=case   when   a.isnullable=1   then   '是'else   '否'   end,
-            //    DefaultValue=isnull(e.text,''),
-            //    Label=isnull(g.[value],'')
-            //    FROM   syscolumns   a
-            //    left   join   systypes   b   on   a.xusertype=b.xusertype
-            //    inner   join   sysobjects   d   on   a.id=d.id     and   d.xtype='U'   and     d.name<>'dtproperties'
-            //    left   join   syscomments   e   on   a.cdefault=e.id
-            //    left   join   sys.extended_properties   g   on   a.id=g.major_id   and   a.colid=g.minor_id
-            //    left   join   sys.extended_properties   f   on   d.id=f.major_id   and   f.minor_id=0
-            //    where   d.name='{0}' 
-            //    order   by   a.id,a.colorder
-            //";
-            string COLUMN_SQL = @"SELECT COL_D , COL_CODE , COL_NAME , COL_TYPE , COL_LENGTH , PRIMARY_KEY ,COL_PRECISION ,LIST_DISPLAY , QUICK_QUERY , EXPERT_QUERY ,
-                CAN_EDIT ,CAN_NULL ,DIC_CODE , ORDER_INDEX ,COL_DESC,TABLE_NAME,INPUT_TYPE  FROM dbo.SYS_T_MENUTABLECOLUMN WHERE TABLE_NAME='{0}' ORDER BY ORDER_INDEX ASC ";
+            string COLUMN_SQL = @"SELECT  
+                Name=a.name,
+                AutoIncrement=case   when   COLUMNPROPERTY(   a.id,a.name,'IsIdentity')=1   then   '是'else   '否'   end,
+                IsPK=case   when   exists(SELECT   1   FROM   sysobjects   where   xtype='PK'   and   name   in   (
+                SELECT   name   FROM   sysindexes   WHERE   indid   in(
+                SELECT   indid   FROM   sysindexkeys   WHERE   id   =   a.id   AND   colid=a.colid
+                )))   then   '是'   else   '否'   end,
+                DataType=b.name,
+                BitLenght=a.length,
+                MaxLength=COLUMNPROPERTY(a.id,a.name,'PRECISION'),
+                Digits=isnull(COLUMNPROPERTY(a.id,a.name,'Scale'),0),
+                CanNull=case   when   a.isnullable=1   then   '是'else   '否'   end,
+                DefaultValue=isnull(e.text,''),
+                Label=isnull(g.[value],'')
+                FROM   syscolumns   a
+                left   join   systypes   b   on   a.xusertype=b.xusertype
+                inner   join   sysobjects   d   on   a.id=d.id     and   d.xtype='U'   and     d.name<>'dtproperties'
+                left   join   syscomments   e   on   a.cdefault=e.id
+                left   join   sys.extended_properties   g   on   a.id=g.major_id   and   a.colid=g.minor_id
+                left   join   sys.extended_properties   f   on   d.id=f.major_id   and   f.minor_id=0
+                where   d.name='{0}' 
+                order   by   a.id,a.colorder
+            ";
             string selTableName = string.Empty;
             string selTableComm = string.Empty;
             string tempClassName = string.Empty;
@@ -590,14 +588,12 @@ namespace GenerateCode
                     entityInfo.dataTable = dtColumn;
                     entityInfo.codeLanguage = codeLanguage.Java;
                     entityInfo.excludes = excludes;
-                    entityInfo.JsOneDirName = txtModelOne.Text;
-                    entityInfo.JsTwoDirName = txtModelTwo.Text;
-                    entityInfo.JsTwoThreeName = txtJsName.Text;
-
-                    entityInfo.createColumnInfo();
+                    //entityInfo.JsOneDirName = txtModelOne.Text;
+                    //entityInfo.JsTwoDirName = txtModelTwo.Text;
+                    //entityInfo.JsTwoThreeName = txtJsName.Text;
 
                     string templatePath = ConfigurationManager.AppSettings["TemplateEntity"].ToString();
-
+                    entityInfo.createColumnInfo();
 
 
                     //生成前端JSController接口实现层代码
@@ -613,7 +609,7 @@ namespace GenerateCode
                     }
                     File.WriteAllText(jsControllerFileDir + "MainController.js", JsController);
 
-                    //生成前端JSController接口实现层代码
+                    ////生成前端JSController接口实现层代码
                     lboxInfo.Items.Add("生成数据表" + selTableComm + "的前端othercontroller层代码...");
                     String JsTemplateotherController = ConfigurationManager.AppSettings["TemplateJsotherController"].ToString();
                     String JsotherController = CreateCode.CreateEntityClass(entityInfo, JsTemplateotherController);

@@ -1,6 +1,6 @@
 ﻿namespace GenerateCode
 {
-    partial class frmMain
+    partial class FrmGenerate
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -248,7 +248,7 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // frmMain
+            // FrmGenerate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -275,7 +275,7 @@
             this.Controls.Add(this.lblUserPwd);
             this.Controls.Add(this.txtUserName);
             this.Controls.Add(this.lblUserName);
-            this.Name = "frmMain";
+            this.Name = "FrmGenerate";
             this.Text = "代码生成参数设置";
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.ResumeLayout(false);
